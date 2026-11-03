@@ -254,7 +254,7 @@ const moduleDefinitions: Record<string, ModuleDefinition> = {
     description:
       "Manage platform-level accounts and explicitly delegated administrative permissions. This is separate from organization users and roles.",
     areas: [
-      "Platform Owner and delegated administrators",
+      "Global Administrator and delegated administrators",
       "Platform account status and access reviews",
       "Permission assignments and access boundaries",
       "Administrative account activity",
@@ -276,7 +276,7 @@ const moduleDefinitions: Record<string, ModuleDefinition> = {
     icon: "◈",
     heading: "Platform ownership and governance",
     description:
-      "The Platform Owner holds the platform's highest governance authority. Delegated Platform Administrators receive only explicitly authorized permissions and cannot appoint themselves as Platform Owner.",
+      "The Global Administrator (Platform Owner) holds the highest administrative and governance authority across AssetPass. Platform Administrators exercise only explicitly delegated permissions and cannot appoint themselves Global Administrator or Platform Owner.",
     areas: [
       "Platform ownership and delegated responsibilities",
       "Administrative roles and permission boundaries",
@@ -694,14 +694,14 @@ export default function Home() {
               className="profile-button"
               onClick={() =>
                 setNotice(
-                  "Platform Owner profile and secure session management will be connected during authentication implementation.",
+                  "Global Administrator profile and secure session management will be connected during authentication implementation.",
                 )
               }
             >
               <span className="profile-avatar">PO</span>
               <span className="profile-copy">
-                <strong>Platform Owner</strong>
-                <small>Platform Governance</small>
+                <strong>Global Administrator</strong>
+                <small>Platform Owner · Highest platform authority</small>
               </span>
               <span className="profile-chevron">⌄</span>
             </button>
