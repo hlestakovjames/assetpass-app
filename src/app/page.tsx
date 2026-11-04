@@ -123,7 +123,7 @@ const initialActivities: Activity[] = [
 ];
 
 const navGroups: { title: string; items: NavItem[] }[] = [
-  { title: "EXECUTIVE & INTELLIGENCE", items: [{ label: "Global Overview", icon: "▦" }, { label: "Platform Analytics & Reports", icon: "▥" }] },
+  { title: "EXECUTIVE & INTELLIGENCE", items: [{ label: "Global Overview", icon: "▦" }, { label: "Global Asset Analytics", icon: "◇" }, { label: "Platform Analytics & Reports", icon: "▥" }] },
   { title: "ORGANIZATION GOVERNANCE", items: [{ label: "Organization Management", icon: "▤", count: "2" }, { label: "Registration & Approvals", icon: "✓" }, { label: "Organization Lifecycle", icon: "↻" }, { label: "Ownership, Succession & Recovery", icon: "◈" }] },
   { title: "IDENTITY & ACCESS", items: [{ label: "Global User Management", icon: "♙" }, { label: "Platform Administrator Management", icon: "♟" }, { label: "Roles & Permissions", icon: "⚿" }, { label: "Authentication & Sessions", icon: "▣" }] },
   { title: "PLATFORM & SITE", items: [{ label: "Site Settings", icon: "⌂" }, { label: "Platform Configuration", icon: "⚙" }, { label: "Communications & Notifications", icon: "✉" }, { label: "Localization & Regional Settings", icon: "◎" }] },
@@ -134,6 +134,7 @@ const navGroups: { title: string; items: NavItem[] }[] = [
 ];
 const pageTitles: Record<string, { title: string; subtitle: string }> = {
   "Global Overview": { title: "Global Overview", subtitle: "Monitor platform governance, organizations and service health." },
+  "Global Asset Analytics": { title: "Global Asset Analytics", subtitle: "Understand asset inventory, lifecycle and trends across the platform using authorized aggregate data." },
   "Organization Management": { title: "Organization Management", subtitle: "Manage organizations registered on AssetPass." },
   "Registration & Approvals": { title: "Registration & Approvals", subtitle: "Review organization applications before activation." },
   "Organization Lifecycle": { title: "Organization Lifecycle", subtitle: "Oversee organization activation, suspension and closure." },
@@ -162,6 +163,21 @@ const pageTitles: Record<string, { title: string; subtitle: string }> = {
 };
 
 const moduleDefinitions: Record<string, ModuleDefinition> = {
+  "Global Asset Analytics": {
+    icon: "◇",
+    heading: "Platform-wide asset intelligence",
+    description:
+      "A consolidated view of asset inventory and lifecycle indicators across participating organizations. This workspace is planned for aggregate analytics; it does not grant unrestricted access to organization asset records.",
+    areas: [
+      "Total registered assets across participating organizations",
+      "Asset lifecycle totals: active, under maintenance, retired and disposed",
+      "Asset distribution by category and organization",
+      "Asset registration and inventory growth trends",
+      "Custody and transfer indicators, including pending acknowledgements",
+      "Inventory data-quality indicators and cross-organization exceptions",
+      "Permission-controlled, audited drill-downs where explicitly authorized",
+    ],
+  },
   "Global Assets": {
     icon: "◇",
     heading: "Cross-organization asset oversight",
@@ -575,7 +591,7 @@ export default function Home() {
                 value={query}
                 onChange={(event) => {
                   setQuery(event.target.value);
-                  setActivePage("Organizations");
+                  setActivePage("Organization Management");
                 }}
                 onFocus={() => {
                   if (
