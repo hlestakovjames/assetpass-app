@@ -9,6 +9,7 @@
 
 ### 1. Executive & Platform Intelligence
 - Global Overview
+- Global Asset Analytics
 - Platform Analytics & Reports
 
 ### 2. Organization Governance
@@ -57,7 +58,7 @@
 | Platform Overview | Executive & Platform Intelligence | Retain; evolve into Global Overview |
 | Organizations | Organization Governance | Retain; expand organization lifecycle controls |
 | Registration Reviews | Organization Governance | Retain; present as Registration & Approvals |
-| Global Assets | Executive & Platform Intelligence / Organization Governance | Review and constrain to authorized platform-level summaries; avoid unrestricted tenant data access |
+| Global Assets | Executive & Platform Intelligence | Evolve into Global Asset Analytics: aggregate cross-organization inventory, lifecycle and trend indicators; avoid unrestricted tenant data access |
 | Custody & Movements | Executive & Platform Intelligence / Organization Governance | Review; platform-wide indicators and exceptions only unless explicitly authorized |
 | Platform Users & Access | Identity & Access Administration | Expand and separate global users, delegated admins, roles, and authentication/session controls |
 | Growth & Analytics | Executive & Platform Intelligence | Retain; consolidate into Platform Analytics & Reports |
@@ -71,6 +72,19 @@
 | Platform Settings | Platform & Site Configuration | Retain; expand and explicitly include Site Settings |
 
 > The existing navigation contains 15 entries including Registration Reviews, not 12. This audit uses the actual source labels as found in `src/app/page.tsx`; prior references to “12 modules” should be treated as the earlier baseline count, not the current source count.
+
+## Global Asset Analytics scope
+
+Global Asset Analytics provides platform-wide, aggregate asset intelligence for the Global Administrator. Its planned measures include:
+
+- Total registered assets across participating organizations.
+- Asset lifecycle totals, including active, under maintenance, retired and disposed assets.
+- Asset distribution by category and organization, using authorized aggregate data.
+- Asset registration and growth trends over time.
+- Custody and transfer indicators, such as pending acknowledgements and unresolved exceptions, without exposing private custody details by default.
+- Inventory data-quality indicators and cross-organization exceptions.
+
+The analytics layer must respect tenant isolation and data minimization. Default views must not expose asset serial numbers, named custodians, exact locations, private notes, organization financial information or detailed maintenance/disposal records. Any exceptional drill-down must be separately permissioned, justified and audited. Metrics must be calculated from authorized, reliable platform data; demo or unavailable data must be clearly labelled rather than presented as live totals.
 
 ## Authority and data boundaries
 
