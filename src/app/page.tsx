@@ -123,104 +123,42 @@ const initialActivities: Activity[] = [
 ];
 
 const navGroups: { title: string; items: NavItem[] }[] = [
-  {
-    title: "PLATFORM",
-    items: [
-      { label: "Platform Overview", icon: "▦" },
-      { label: "Organizations", icon: "▤", count: "2" },
-      { label: "Global Assets", icon: "◇" },
-      { label: "Custody & Movements", icon: "⇄" },
-      { label: "Platform Users & Access", icon: "♙" },
-      { label: "Growth & Analytics", icon: "▥" },
-    ],
-  },
-  {
-    title: "GOVERNANCE",
-    items: [
-      { label: "Platform Governance", icon: "◈" },
-      { label: "Security & Audit", icon: "◷" },
-      { label: "Maintenance Oversight", icon: "⚙" },
-      { label: "Compliance Oversight", icon: "✓" },
-    ],
-  },
-  {
-    title: "REPORTING",
-    items: [{ label: "Reports & Exports", icon: "▤" }],
-  },
-  {
-    title: "OPERATIONS",
-    items: [
-      { label: "Integrations & Data Operations", icon: "⇄" },
-      { label: "Support & Platform Operations", icon: "◉" },
-    ],
-  },
-  {
-    title: "SYSTEM",
-    items: [{ label: "Platform Settings", icon: "⚙" }],
-  },
+  { title: "EXECUTIVE & INTELLIGENCE", items: [{ label: "Global Overview", icon: "▦" }, { label: "Platform Analytics & Reports", icon: "▥" }] },
+  { title: "ORGANIZATION GOVERNANCE", items: [{ label: "Organization Management", icon: "▤", count: "2" }, { label: "Registration & Approvals", icon: "✓" }, { label: "Organization Lifecycle", icon: "↻" }, { label: "Ownership, Succession & Recovery", icon: "◈" }] },
+  { title: "IDENTITY & ACCESS", items: [{ label: "Global User Management", icon: "♙" }, { label: "Platform Administrator Management", icon: "♟" }, { label: "Roles & Permissions", icon: "⚿" }, { label: "Authentication & Sessions", icon: "▣" }] },
+  { title: "PLATFORM & SITE", items: [{ label: "Site Settings", icon: "⌂" }, { label: "Platform Configuration", icon: "⚙" }, { label: "Communications & Notifications", icon: "✉" }, { label: "Localization & Regional Settings", icon: "◎" }] },
+  { title: "PRODUCT & COMMERCIAL", items: [{ label: "Subscription & Plans Management", icon: "▣" }, { label: "Module & Feature Management", icon: "◫" }, { label: "Marketplace Administration", icon: "◇" }] },
+  { title: "SECURITY, RISK & COMPLIANCE", items: [{ label: "Security Monitoring & Incidents", icon: "◷" }, { label: "Audit Logs & Activity Review", icon: "≡" }, { label: "Compliance & Data Governance", icon: "✓" }] },
+  { title: "OPERATIONS & INTEGRATIONS", items: [{ label: "System Health & Monitoring", icon: "◉" }, { label: "Integrations & API Management", icon: "⇄" }, { label: "Background Jobs & Scheduled Tasks", icon: "◷" }, { label: "Backup & Recovery Operations", icon: "↶" }] },
+  { title: "SUPPORT & RESOLUTION", items: [{ label: "Support Management", icon: "?" }, { label: "Dispute & Escalation Management", icon: "⚑" }, { label: "Help Centre & Knowledge Base", icon: "☰" }] },
 ];
-
 const pageTitles: Record<string, { title: string; subtitle: string }> = {
-  "Platform Overview": {
-    title: "Platform Overview",
-    subtitle: "Monitor organizations, registrations and platform-wide operations.",
-  },
-  Organizations: {
-    title: "Organizations",
-    subtitle: "Review organizations registered on the AssetPass platform.",
-  },
-  "Registration Reviews": {
-    title: "Registration Reviews",
-    subtitle: "Review organization applications before granting platform access.",
-  },
-  "Global Assets": {
-    title: "Global Assets",
-    subtitle: "Oversee asset records across the organizations using AssetPass.",
-  },
-  "Custody & Movements": {
-    title: "Custody & Movements",
-    subtitle: "Monitor asset custody, assignments and movement activity across organizations.",
-  },
-  "Platform Users & Access": {
-    title: "Platform Users & Access",
-    subtitle: "Oversee platform accounts, delegated administration and access permissions.",
-  },
-  "Growth & Analytics": {
-    title: "Growth & Analytics",
-    subtitle: "Monitor organization growth, adoption, asset activity and platform performance.",
-  },
-  "Platform Governance": {
-    title: "Platform Governance",
-    subtitle: "Manage platform ownership, delegated responsibilities and governance controls.",
-  },
-  "Security & Audit": {
-    title: "Security & Audit",
-    subtitle: "Oversee security events, audit trails and platform access activity.",
-  },
-  "Maintenance Oversight": {
-    title: "Maintenance Oversight",
-    subtitle: "Monitor maintenance indicators and maintenance-related activity across the platform.",
-  },
-  "Compliance Oversight": {
-    title: "Compliance Oversight",
-    subtitle: "Monitor compliance obligations, inspections and organizational exceptions.",
-  },
-  "Reports & Exports": {
-    title: "Reports & Exports",
-    subtitle: "Review reporting capabilities, operational summaries and authorized exports.",
-  },
-  "Integrations & Data Operations": {
-    title: "Integrations & Data Operations",
-    subtitle: "Oversee planned integrations, data imports, exports and data quality.",
-  },
-  "Support & Platform Operations": {
-    title: "Support & Platform Operations",
-    subtitle: "Oversee support workflows, service operations and platform incidents.",
-  },
-  "Platform Settings": {
-    title: "Platform Settings",
-    subtitle: "Review platform configuration and administrative controls.",
-  },
+  "Global Overview": { title: "Global Overview", subtitle: "Monitor platform governance, organizations and service health." },
+  "Organization Management": { title: "Organization Management", subtitle: "Manage organizations registered on AssetPass." },
+  "Registration & Approvals": { title: "Registration & Approvals", subtitle: "Review organization applications before activation." },
+  "Organization Lifecycle": { title: "Organization Lifecycle", subtitle: "Oversee organization activation, suspension and closure." },
+  "Ownership, Succession & Recovery": { title: "Ownership, Succession & Recovery", subtitle: "Manage protected platform ownership and governance continuity." },
+  "Global User Management": { title: "Global User Management", subtitle: "Oversee platform accounts and access boundaries." },
+  "Platform Administrator Management": { title: "Platform Administrator Management", subtitle: "Manage delegated platform administrators." },
+  "Roles & Permissions": { title: "Roles & Permissions", subtitle: "Review platform roles and permission policies." },
+  "Authentication & Sessions": { title: "Authentication & Sessions", subtitle: "Manage authentication policies and session oversight." },
+  "Site Settings": { title: "Site Settings", subtitle: "Configure public-facing AssetPass identity and site preferences." },
+  "Platform Configuration": { title: "Platform Configuration", subtitle: "Manage global platform defaults and configuration." },
+  "Communications & Notifications": { title: "Communications & Notifications", subtitle: "Manage system communications and notification settings." },
+  "Localization & Regional Settings": { title: "Localization & Regional Settings", subtitle: "Configure language, timezone and regional defaults." },
+  "Subscription & Plans Management": { title: "Subscription & Plans Management", subtitle: "Manage commercial plans and subscription policies." },
+  "Module & Feature Management": { title: "Module & Feature Management", subtitle: "Govern platform capabilities and feature availability." },
+  "Marketplace Administration": { title: "Marketplace Administration", subtitle: "Manage marketplace policies and platform-level operations." },
+  "Security Monitoring & Incidents": { title: "Security Monitoring & Incidents", subtitle: "Review security events and incident response." },
+  "Audit Logs & Activity Review": { title: "Audit Logs & Activity Review", subtitle: "Review platform administrative actions and audit history." },
+  "Compliance & Data Governance": { title: "Compliance & Data Governance", subtitle: "Oversee platform compliance, privacy and data governance." },
+  "System Health & Monitoring": { title: "System Health & Monitoring", subtitle: "Monitor platform availability and service health." },
+  "Integrations & API Management": { title: "Integrations & API Management", subtitle: "Manage integrations and API governance." },
+  "Background Jobs & Scheduled Tasks": { title: "Background Jobs & Scheduled Tasks", subtitle: "Monitor automated and scheduled platform processes." },
+  "Backup & Recovery Operations": { title: "Backup & Recovery Operations", subtitle: "Oversee backup integrity and recovery readiness." },
+  "Support Management": { title: "Support Management", subtitle: "Manage support requests and service assistance." },
+  "Dispute & Escalation Management": { title: "Dispute & Escalation Management", subtitle: "Handle escalated platform-level cases." },
+  "Help Centre & Knowledge Base": { title: "Help Centre & Knowledge Base", subtitle: "Manage help content and knowledge resources." },
 };
 
 const moduleDefinitions: Record<string, ModuleDefinition> = {
@@ -400,7 +338,7 @@ function OrganizationStatus({ status }: { status: OrgStatus }) {
 
 export default function Home() {
   const [organizations, setOrganizations] = useState(initialOrganizations);
-  const [activePage, setActivePage] = useState("Platform Overview");
+  const [activePage, setActivePage] = useState("Global Overview");
   const [query, setQuery] = useState("");
   const [organizationFilter, setOrganizationFilter] = useState("All");
   const [showNotifications, setShowNotifications] = useState(false);
@@ -447,7 +385,7 @@ export default function Home() {
         organizationFilter === "All" || org.status === organizationFilter;
 
       const matchesReviewPage =
-        activePage !== "Registration Reviews" ||
+        activePage !== "Registration & Approvals" ||
         org.status === "Pending review";
 
       return matchesQuery && matchesStatus && matchesReviewPage;
@@ -502,8 +440,8 @@ export default function Home() {
     closeReview();
   }
 
-  const pageInfo = pageTitles[activePage] ?? pageTitles["Platform Overview"];
-  const moduleDefinition = moduleDefinitions[activePage];
+  const pageInfo = pageTitles[activePage] ?? pageTitles["Global Overview"];
+  const moduleDefinition = moduleDefinitions[activePage] ?? (activePage !== "Global Overview" && activePage !== "Organization Management" && activePage !== "Registration & Approvals" ? { icon: "◈", heading: activePage, description: pageInfo.subtitle, areas: ["Module workspace structure", "Authorized administrative actions", "Review history and accountability", "Backend integration pending"] } : undefined);
 
   return (
     <div className="app-shell">
@@ -518,7 +456,7 @@ export default function Home() {
       <aside className={`sidebar ${mobileMenu ? "sidebar-open" : ""}`}>
         <button
           className="brand"
-          onClick={() => navigate("Platform Overview")}
+          onClick={() => navigate("Global Overview")}
           aria-label="AssetPass platform overview"
         >
           <span className="brand-mark">
@@ -569,8 +507,8 @@ export default function Home() {
                   onClick={() => navigate(item.label)}
                   className={`nav-item ${
                     activePage === item.label ||
-                    (activePage === "Registration Reviews" &&
-                      item.label === "Organizations")
+                    (activePage === "Registration & Approvals" &&
+                      item.label === "Organization Management")
                       ? "nav-item-active"
                       : ""
                   }`}
@@ -580,7 +518,7 @@ export default function Home() {
                 >
                   <Icon>{item.icon}</Icon>
                   <span className="nav-label">{item.label}</span>
-                  {item.label === "Organizations" && counts.pending > 0 && (
+                  {item.label === "Organization Management" && counts.pending > 0 && (
                     <span className="nav-count">{counts.pending}</span>
                   )}
                 </button>
@@ -641,8 +579,8 @@ export default function Home() {
                 }}
                 onFocus={() => {
                   if (
-                    activePage !== "Organizations" &&
-                    activePage !== "Registration Reviews"
+                    activePage !== "Organization Management" &&
+                    activePage !== "Registration & Approvals"
                   ) {
                     setActivePage("Organizations");
                   }
@@ -680,7 +618,7 @@ export default function Home() {
                   </p>
                   <button
                     className="text-link"
-                    onClick={() => navigate("Registration Reviews")}
+                    onClick={() => navigate("Registration & Approvals")}
                   >
                     Review registrations →
                   </button>
@@ -760,14 +698,14 @@ export default function Home() {
               </button>
               <button
                 className="button button-primary"
-                onClick={() => navigate("Registration Reviews")}
+                onClick={() => navigate("Registration & Approvals")}
               >
                 Review registrations
               </button>
             </div>
           </section>
 
-          {activePage === "Platform Overview" && (
+          {activePage === "Global Overview" && (
             <>
               <section className="metrics-grid" aria-label="Platform overview">
                 <article className="metric-card metric-total">
@@ -837,7 +775,7 @@ export default function Home() {
 
                   <button
                     className="action-row"
-                    onClick={() => navigate("Registration Reviews")}
+                    onClick={() => navigate("Registration & Approvals")}
                   >
                     <span className="action-icon action-amber">◷</span>
                     <span className="action-copy">
@@ -852,7 +790,7 @@ export default function Home() {
 
                   <button
                     className="action-row"
-                    onClick={() => navigate("Platform Users & Access")}
+                    onClick={() => navigate("Global User Management")}
                   >
                     <span className="action-icon action-blue">♙</span>
                     <span className="action-copy">
@@ -866,7 +804,7 @@ export default function Home() {
 
                   <button
                     className="action-row"
-                    onClick={() => navigate("Security & Audit")}
+                    onClick={() => navigate("Audit Logs & Activity Review")}
                   >
                     <span className="action-icon action-red">◈</span>
                     <span className="action-copy">
@@ -881,7 +819,7 @@ export default function Home() {
                   <div className="panel-footer">
                     <button
                       className="text-link"
-                      onClick={() => navigate("Platform Governance")}
+                      onClick={() => navigate("Ownership, Succession & Recovery")}
                     >
                       View governance <span>→</span>
                     </button>
@@ -953,7 +891,7 @@ export default function Home() {
                         className="legend-row"
                         key={item.label}
                         onClick={() => {
-                          navigate("Organizations");
+                          navigate("Organization Management");
                           setOrganizationFilter(item.status);
                         }}
                       >
@@ -988,7 +926,7 @@ export default function Home() {
                   </div>
                   <button
                     className="text-link"
-                    onClick={() => navigate("Organizations")}
+                    onClick={() => navigate("Organization Management")}
                   >
                     View organizations <span>→</span>
                   </button>
@@ -1009,7 +947,7 @@ export default function Home() {
                   </div>
                   <button
                     className="text-link"
-                    onClick={() => navigate("Security & Audit")}
+                    onClick={() => navigate("Audit Logs & Activity Review")}
                   >
                     View security & audit <span>→</span>
                   </button>
@@ -1019,13 +957,13 @@ export default function Home() {
             </>
           )}
 
-          {(activePage === "Organizations" ||
-            activePage === "Registration Reviews") && (
+          {(activePage === "Organization Management" ||
+            activePage === "Registration & Approvals") && (
             <section className="panel register-panel full-register">
               <div className="panel-heading register-heading">
                 <div>
                   <div className="panel-title">
-                    {activePage === "Registration Reviews"
+                    {activePage === "Registration & Approvals"
                       ? "Applications awaiting review"
                       : "Registered organizations"}
                   </div>
@@ -1046,7 +984,7 @@ export default function Home() {
                   />
                 </label>
 
-                {activePage === "Organizations" && (
+                {activePage === "Organization Management" && (
                   <select
                     className="status-select"
                     value={organizationFilter}
@@ -1142,7 +1080,7 @@ export default function Home() {
                   live records, completed integrations or active backend
                   operations.
                 </p>
-                {activePage === "Platform Governance" && (
+                {activePage === "Ownership, Succession & Recovery" && (
                   <p>
                     Organization Founding Owners and Asset Managers have
                     separate organization-level responsibilities. Neither role
@@ -1151,7 +1089,7 @@ export default function Home() {
                 )}
                 <button
                   className="button button-secondary"
-                  onClick={() => navigate("Platform Overview")}
+                  onClick={() => navigate("Global Overview")}
                 >
                   Return to overview
                 </button>
