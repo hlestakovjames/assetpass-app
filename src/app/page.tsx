@@ -598,7 +598,7 @@ export default function Home() {
                     activePage !== "Organization Management" &&
                     activePage !== "Registration & Approvals"
                   ) {
-                    setActivePage("Organizations");
+                    setActivePage("Organization Management");
                   }
                 }}
               />
