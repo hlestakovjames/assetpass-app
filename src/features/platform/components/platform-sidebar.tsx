@@ -24,7 +24,7 @@ type PlatformSidebarProps = {
   pendingCount: number;
   mobileMenuOpen: boolean;
   onNavigate: (label: string) => void;
-  onHelp: () => void;
+  onHelp: (message: string) => void;
 };
 
 export function PlatformSidebar({
