@@ -5,6 +5,7 @@ import type { FormEvent, ReactNode } from "react";
 import { ThemeSelector } from "@/components/theme-selector";
 import { StatusBadge } from "@/components/status-badge";
 import { EmptyState } from "@/components/empty-state";
+import { FormField } from "@/components/form-field";
 
 type OrgStatus = "Pending review" | "Active" | "Suspended" | "Rejected";
 type ReviewAction = "approve" | "reject";
@@ -1167,14 +1168,18 @@ export default function Home() {
             </div>
 
             <form onSubmit={submitReview}>
-              <label className="form-field">
-                <span>
-                  {decisionAction === "approve"
+              <FormField
+                label={
+                  decisionAction === "approve"
                     ? "Review note (optional)"
-                    : "Reason for rejection"}
-                  {decisionAction === "reject" && <b> *</b>}
-                </span>
+                    : "Reason for rejection"
+                }
+                required={decisionAction === "reject"}
+                htmlFor="organization-review-note"
+                hint="Maximum 500 characters. This note remains in this demo session only."
+              >
                 <textarea
+                  id="organization-review-note"
                   required={decisionAction === "reject"}
                   maxLength={500}
                   value={decisionReason}
@@ -1185,7 +1190,7 @@ export default function Home() {
                       : "Explain the reason for rejection..."
                   }
                 />
-              </label>
+              </FormField>
 
               <div className="modal-demo-note">
                 <span>i</span>
