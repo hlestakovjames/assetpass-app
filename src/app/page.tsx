@@ -3,6 +3,8 @@
 import { useMemo, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import { ThemeSelector } from "@/components/theme-selector";
+import { StatusBadge } from "@/components/status-badge";
+import { EmptyState } from "@/components/empty-state";
 
 type OrgStatus = "Pending review" | "Active" | "Suspended" | "Rejected";
 type ReviewAction = "approve" | "reject";
@@ -336,21 +338,16 @@ function Icon({
 }
 
 function OrganizationStatus({ status }: { status: OrgStatus }) {
-  const className =
+  const tone =
     status === "Active"
-      ? "status-assigned"
+      ? "success"
       : status === "Pending review"
-        ? "status-maintenance"
+        ? "warning"
         : status === "Suspended"
-          ? "status-retired"
-          : "status-available";
+          ? "danger"
+          : "neutral";
 
-  return (
-    <span className={`status-badge ${className}`}>
-      <span className="status-dot" />
-      {status}
-    </span>
-  );
+  return <StatusBadge label={status} tone={tone} />;
 }
 
 export default function Home() {
@@ -1027,23 +1024,16 @@ export default function Home() {
               />
 
               {filteredOrganizations.length === 0 && (
-                <div className="empty-state">
-                  <span>⌕</span>
-                  <strong>No matching organizations</strong>
-                  <p>
-                    Try another search term or change the organization status
-                    filter.
-                  </p>
-                  <button
-                    className="text-link"
-                    onClick={() => {
-                      setQuery("");
-                      setOrganizationFilter("All");
-                    }}
-                  >
-                    Clear filters
-                  </button>
-                </div>
+                <EmptyState
+                  icon="⌕"
+                  title="No matching organizations"
+                  description="Try another search term or change the organization status filter."
+                  actionLabel="Clear filters"
+                  onAction={() => {
+                    setQuery("");
+                    setOrganizationFilter("All");
+                  }}
+                />
               )}
             </section>
           )}
