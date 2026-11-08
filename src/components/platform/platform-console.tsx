@@ -3,20 +3,14 @@
 import { useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useOrganizationDemo } from "@/features/organizations/organization-demo-provider";
+import { ActivityList, type Activity } from "@/features/platform/components/activity-list";
+import { OrganizationTable } from "@/features/platform/components/organization-table";
+import { Icon } from "@/features/platform/components/platform-icon";
 import type { Organization, OrgStatus, ReviewAction } from "@/features/organizations/demo-data";
-import type { FormEvent, ReactNode } from "react";
+import type { FormEvent } from "react";
 import { ThemeSelector } from "@/components/theme-selector";
-import { StatusBadge } from "@/components/status-badge";
 import { EmptyState } from "@/components/empty-state";
 import { FormField } from "@/components/form-field";
-
-type Activity = {
-  icon: string;
-  title: string;
-  detail: string;
-  time: string;
-  type: string;
-};
 
 type NavItem = {
   label: string;
@@ -304,29 +298,6 @@ const routeLabels = Object.fromEntries(
 function pageFromPath(pathname: string) {
   const slug = pathname.split("/").filter(Boolean).pop() ?? "overview";
   return routeLabels[slug] ?? "Global Overview";
-}
-
-function Icon({
-  children,
-  className = "",
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
-  return <span className={`icon ${className}`}>{children}</span>;
-}
-
-function OrganizationStatus({ status }: { status: OrgStatus }) {
-  const tone =
-    status === "Active"
-      ? "success"
-      : status === "Pending review"
-        ? "warning"
-        : status === "Suspended"
-          ? "danger"
-          : "neutral";
-
-  return <StatusBadge label={status} tone={tone} />;
 }
 
 export function PlatformConsole() {
@@ -1201,103 +1172,3 @@ export function PlatformConsole() {
   );
 }
 
-function ActivityList({ activities }: { activities: Activity[] }) {
-  return (
-    <div className="activity-list">
-      {activities.map((activity) => (
-        <div className="activity-row" key={activity.title}>
-          <span className={`activity-icon activity-${activity.type}`}>
-            {activity.icon}
-          </span>
-          <div className="activity-copy">
-            <strong>{activity.title}</strong>
-            <span>{activity.detail}</span>
-          </div>
-          <time>{activity.time}</time>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function OrganizationTable({
-  organizations,
-  onReview,
-}: {
-  organizations: Organization[];
-  onReview: (org: Organization, action: ReviewAction) => void;
-}) {
-  return (
-    <div className="table-scroll">
-      <table className="asset-table">
-        <thead>
-          <tr>
-            <th>ORGANIZATION</th>
-            <th>REGISTRATION ID</th>
-            <th>APPLICANT</th>
-            <th>SUBMITTED</th>
-            <th>STATUS</th>
-            <th>ACTIONS</th>
-          </tr>
-        </thead>
-        <tbody>
-          {organizations.map((org) => (
-            <tr key={org.id}>
-              <td>
-                <div className="asset-name-cell">
-                  <span className="asset-thumbnail thumb-other">◇</span>
-                  <span className="asset-name-copy">
-                    <strong>{org.name}</strong>
-                    <small>{org.category}</small>
-                  </span>
-                </div>
-              </td>
-              <td>
-                <span className="asset-id">{org.id}</span>
-              </td>
-              <td>
-                <span className="custodian-name">{org.applicant}</span>
-                <br />
-                <span className="department-name">{org.email}</span>
-              </td>
-              <td>
-                <span className="department-name">{org.submitted}</span>
-              </td>
-              <td>
-                <OrganizationStatus status={org.status} />
-              </td>
-              <td>
-                {org.status === "Pending review" ? (
-                  <div className="organization-actions">
-                    <button
-                      className="text-link"
-                      onClick={() => onReview(org, "approve")}
-                      aria-label={`Approve ${org.name} in demo`}
-                    >
-                      Review
-                    </button>
-                    <button
-                      className="text-link"
-                      onClick={() => onReview(org, "reject")}
-                      aria-label={`Reject ${org.name} in demo`}
-                    >
-                      Reject
-                    </button>
-                  </div>
-                ) : (
-                  <span className="department-name">
-                    {org.status === "Active"
-                      ? `${org.users} users`
-                      : org.status === "Suspended"
-                        ? "Suspended"
-                        : "Rejected"}
-                  </span>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
