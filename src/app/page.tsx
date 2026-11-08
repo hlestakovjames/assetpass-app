@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
+import { ThemeSelector } from "@/components/theme-selector";
 
 type OrgStatus = "Pending review" | "Active" | "Suspended" | "Rejected";
 type ReviewAction = "approve" | "reject";
@@ -604,6 +605,8 @@ export default function Home() {
               />
               <kbd>/</kbd>
             </label>
+
+            <ThemeSelector />
 
             <div className="notification-wrap">
               <button
