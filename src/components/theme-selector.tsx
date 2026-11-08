@@ -1,9 +1,30 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 
 export function ThemeSelector() {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // The saved theme is only available in the browser. Keep the server and
+  // first client render identical, then show the interactive selector.
+  if (!mounted) {
+    return (
+      <span
+        className="theme-selector-placeholder"
+        role="status"
+        aria-label="Loading appearance preference"
+      >
+        <span aria-hidden="true">◐</span>
+      </span>
+    );
+  }
+
   const currentTheme = theme ?? "system";
 
   return (
