@@ -2596,3 +2596,39 @@ html[data-theme="dark"] textarea:focus-visible {
     transition-property: background-color, border-color, color, box-shadow;
   }
 }
+
+/* Fine-grained contrast adjustments for secondary controls and labels. */
+html[data-theme="dark"] .search-symbol,
+html[data-theme="dark"] .row-arrow,
+html[data-theme="dark"] .notification-popover .muted-small,
+html[data-theme="dark"] .modal-heading p {
+  color: var(--text-muted);
+}
+
+html[data-theme="dark"] .notification-dot {
+  border-color: var(--surface);
+}
+
+html[data-theme="dark"] .profile-avatar {
+  border-color: #315b59;
+  background: #1d4542;
+  color: #91e1d3;
+}
+
+html[data-theme="dark"] .metric-neutral {
+  color: #b5c8d7;
+}
+
+html[data-theme="dark"] .unassigned {
+  color: #e9c47c;
+}
+
+html[data-theme="dark"] .activity-copy strong {
+  color: var(--text-strong);
+}
+
+html[data-theme="dark"] .mobile-menu-button {
+  border-color: var(--border-dark);
+  background: var(--surface-raised);
+  color: var(--text-body);
+}
