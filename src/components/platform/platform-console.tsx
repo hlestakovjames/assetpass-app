@@ -5,7 +5,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { useOrganizationDemo } from "@/features/organizations/organization-demo-provider";
 import { ActivityList, type Activity } from "@/features/platform/components/activity-list";
 import { OrganizationTable } from "@/features/platform/components/organization-table";
-import { Icon } from "@/features/platform/components/platform-icon";
 import type { Organization, OrgStatus, ReviewAction } from "@/features/organizations/demo-data";
 import type { FormEvent } from "react";
 import { EmptyState } from "@/components/empty-state";
@@ -13,12 +12,6 @@ import { FormField } from "@/components/form-field";
 import { PlatformShell } from "@/components/platform/platform-shell";
 import { PlatformSidebar } from "@/features/platform/components/platform-sidebar";
 import { PlatformHeader } from "@/features/platform/components/platform-header";
-
-type NavItem = {
-  label: string;
-  icon: string;
-  count?: string;
-};
 
 type ModuleDefinition = {
   icon: string;
@@ -409,11 +402,7 @@ export function PlatformConsole() {
         pendingCount={counts.pending}
         mobileMenuOpen={mobileMenu}
         onNavigate={navigate}
-        onHelp={() =>
-          setNotice(
-            "Help resources and support workflows will be connected in a later implementation phase.",
-          )
-        }
+        onHelp={(message) => setNotice(message)}
       />
 
       <main className="main-area">
@@ -437,11 +426,7 @@ export function PlatformConsole() {
           notificationsOpen={showNotifications}
           onToggleNotifications={() => setShowNotifications((value) => !value)}
           onNavigate={navigate}
-          onProfileClick={() =>
-            setNotice(
-              "Global Administrator profile and secure session management will be connected during authentication implementation.",
-            )
-          }
+          onProfileClick={(message) => setNotice(message)}
         />
 
         <div className="page-content">
