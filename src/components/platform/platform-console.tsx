@@ -8,10 +8,11 @@ import { OrganizationTable } from "@/features/platform/components/organization-t
 import { Icon } from "@/features/platform/components/platform-icon";
 import type { Organization, OrgStatus, ReviewAction } from "@/features/organizations/demo-data";
 import type { FormEvent } from "react";
-import { ThemeSelector } from "@/components/theme-selector";
 import { EmptyState } from "@/components/empty-state";
 import { FormField } from "@/components/form-field";
 import { PlatformShell } from "@/components/platform/platform-shell";
+import { PlatformSidebar } from "@/features/platform/components/platform-sidebar";
+import { PlatformHeader } from "@/features/platform/components/platform-header";
 
 type NavItem = {
   label: string;
@@ -59,16 +60,6 @@ const initialActivities: Activity[] = [
   },
 ];
 
-const navGroups: { title: string; items: NavItem[] }[] = [
-  { title: "EXECUTIVE & INTELLIGENCE", items: [{ label: "Global Overview", icon: "▦" }, { label: "Global Asset Analytics", icon: "◇" }, { label: "Platform Analytics & Reports", icon: "▥" }] },
-  { title: "ORGANIZATION GOVERNANCE", items: [{ label: "Organization Management", icon: "▤", count: "2" }, { label: "Registration & Approvals", icon: "✓" }, { label: "Organization Lifecycle", icon: "↻" }, { label: "Ownership, Succession & Recovery", icon: "◈" }] },
-  { title: "IDENTITY & ACCESS", items: [{ label: "Global User Management", icon: "♙" }, { label: "Platform Administrator Management", icon: "♟" }, { label: "Roles & Permissions", icon: "⚿" }, { label: "Authentication & Sessions", icon: "▣" }] },
-  { title: "PLATFORM & SITE", items: [{ label: "Site Settings", icon: "⌂" }, { label: "Platform Configuration", icon: "⚙" }, { label: "Communications & Notifications", icon: "✉" }, { label: "Localization & Regional Settings", icon: "◎" }] },
-  { title: "PRODUCT & COMMERCIAL", items: [{ label: "Subscription & Plans Management", icon: "▣" }, { label: "Module & Feature Management", icon: "◫" }, { label: "Marketplace Administration", icon: "◇" }] },
-  { title: "SECURITY, RISK & COMPLIANCE", items: [{ label: "Security Monitoring & Incidents", icon: "◷" }, { label: "Audit Logs & Activity Review", icon: "≡" }, { label: "Compliance & Data Governance", icon: "✓" }] },
-  { title: "OPERATIONS & INTEGRATIONS", items: [{ label: "System Health & Monitoring", icon: "◉" }, { label: "Integrations & API Management", icon: "⇄" }, { label: "Background Jobs & Scheduled Tasks", icon: "◷" }, { label: "Backup & Recovery Operations", icon: "↶" }] },
-  { title: "SUPPORT & RESOLUTION", items: [{ label: "Support Management", icon: "?" }, { label: "Dispute & Escalation Management", icon: "⚑" }, { label: "Help Centre & Knowledge Base", icon: "☰" }] },
-];
 const pageTitles: Record<string, { title: string; subtitle: string }> = {
   "Global Overview": { title: "Global Overview", subtitle: "Monitor platform governance, organizations and service health." },
   "Global Asset Analytics": { title: "Global Asset Analytics", subtitle: "Understand asset inventory, lifecycle and trends across the platform using authorized aggregate data." },
@@ -413,200 +404,45 @@ export function PlatformConsole() {
 
   return (
     <PlatformShell mobileMenuOpen={mobileMenu} onCloseMobileMenu={() => setMobileMenu(false)}>
-      <aside className={`sidebar ${mobileMenu ? "sidebar-open" : ""}`}>
-        <button
-          className="brand"
-          onClick={() => navigate("Global Overview")}
-          aria-label="AssetPass platform overview"
-        >
-          <span className="brand-mark">
-            <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
-              <path
-                d="M20 3.5 34 9v10.2c0 8.4-5.8 14.2-14 17.3C11.8 33.4 6 27.6 6 19.2V9L20 3.5Z"
-                stroke="currentColor"
-                strokeWidth="2.4"
-                strokeLinejoin="round"
-              />
-              <path
-                d="m20 11 8 4.3v9.2L20 29l-8-4.5v-9.2L20 11Z"
-                stroke="#2DD4BF"
-                strokeWidth="2"
-                strokeLinejoin="round"
-              />
-              <path
-                d="m12 15.3 8 4.6 8-4.6M20 19.9V29"
-                stroke="#2DD4BF"
-                strokeWidth="1.8"
-              />
-            </svg>
-          </span>
-          <span className="brand-copy">
-            <strong>
-              Asset<span>Pass</span>
-            </strong>
-            <small>ASSET LIFECYCLE PLATFORM</small>
-          </span>
-        </button>
-
-        <div className="workspace-selector">
-          <div className="workspace-avatar">P</div>
-          <div className="workspace-copy">
-            <span>PLATFORM WORKSPACE</span>
-            <strong>Platform Administration</strong>
-          </div>
-          <span className="workspace-chevron">⌄</span>
-        </div>
-
-        <div className="sidebar-scroll">
-          {navGroups.map((group) => (
-            <div className="nav-group" key={group.title}>
-              <div className="nav-heading">{group.title}</div>
-              {group.items.map((item) => (
-                <button
-                  key={item.label}
-                  onClick={() => navigate(item.label)}
-                  className={`nav-item ${
-                    activePage === item.label ||
-                    (activePage === "Registration & Approvals" &&
-                      item.label === "Organization Management")
-                      ? "nav-item-active"
-                      : ""
-                  }`}
-                  aria-current={
-                    activePage === item.label ? "page" : undefined
-                  }
-                >
-                  <Icon>{item.icon}</Icon>
-                  <span className="nav-label">{item.label}</span>
-                  {item.label === "Organization Management" && counts.pending > 0 && (
-                    <span className="nav-count">{counts.pending}</span>
-                  )}
-                </button>
-              ))}
-            </div>
-          ))}
-        </div>
-
-        <div className="sidebar-bottom">
-          <div className="help-card">
-            <div className="help-icon">?</div>
-            <strong>Need a hand?</strong>
-            <p>Platform governance and organization oversight.</p>
-            <button
-              onClick={() =>
-                setNotice(
-                  "Help resources and support workflows will be connected in a later implementation phase.",
-                )
-              }
-            >
-              Explore help <span>↗</span>
-            </button>
-          </div>
-          <div className="sidebar-version">
-            <span className="version-dot" />
-            Demo environment <span>v0.2</span>
-          </div>
-        </div>
-      </aside>
+      <PlatformSidebar
+        activePage={activePage}
+        pendingCount={counts.pending}
+        mobileMenuOpen={mobileMenu}
+        onNavigate={navigate}
+        onHelp={() =>
+          setNotice(
+            "Help resources and support workflows will be connected in a later implementation phase.",
+          )
+        }
+      />
 
       <main className="main-area">
-        <header className="topbar">
-          <div className="topbar-left">
-            <button
-              className="mobile-menu-button"
-              aria-label="Open navigation"
-              onClick={() => setMobileMenu(true)}
-            >
-              ☰
-            </button>
-            <div className="breadcrumb">
-              <span>Platform</span>
-              <span className="breadcrumb-separator">/</span>
-              <strong>{activePage}</strong>
-            </div>
-          </div>
-
-          <div className="topbar-actions">
-            <label className="global-search">
-              <span className="search-symbol">⌕</span>
-              <input
-                aria-label="Search organizations"
-                placeholder="Search organizations..."
-                value={query}
-                onChange={(event) => {
-                  setQuery(event.target.value);
-                  router.push("/platform/organizations");
-                }}
-                onFocus={() => {
-                  if (
-                    activePage !== "Organization Management" &&
-                    activePage !== "Registration & Approvals"
-                  ) {
-                    router.push("/platform/organizations");
-                  }
-                }}
-              />
-              <kbd>/</kbd>
-            </label>
-
-            <ThemeSelector />
-
-            <div className="notification-wrap">
-              <button
-                className="icon-button notification-button"
-                aria-label="Notifications"
-                aria-expanded={showNotifications}
-                onClick={() => setShowNotifications((value) => !value)}
-              >
-                ♧
-                {counts.pending > 0 && (
-                  <span className="notification-dot" />
-                )}
-              </button>
-
-              {showNotifications && (
-                <div className="notification-popover">
-                  <strong>Platform notifications</strong>
-                  <p>
-                    <span className="notice-dot amber-dot" />
-                    {counts.pending} organization registration(s) await review.
-                  </p>
-                  <p>
-                    <span className="notice-dot blue-dot" />
-                    Governance and security checks need monitoring.
-                  </p>
-                  <p className="muted-small">
-                    Demo notifications · Not live alerts
-                  </p>
-                  <button
-                    className="text-link"
-                    onClick={() => navigate("Registration & Approvals")}
-                  >
-                    Review registrations →
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <div className="topbar-divider" />
-
-            <button
-              className="profile-button"
-              onClick={() =>
-                setNotice(
-                  "Global Administrator profile and secure session management will be connected during authentication implementation.",
-                )
-              }
-            >
-              <span className="profile-avatar">PO</span>
-              <span className="profile-copy">
-                <strong>Global Administrator</strong>
-                <small>Platform Owner · Highest platform authority</small>
-              </span>
-              <span className="profile-chevron">⌄</span>
-            </button>
-          </div>
-        </header>
+        <PlatformHeader
+          activePage={activePage}
+          query={query}
+          onQueryChange={(value) => {
+            setQuery(value);
+            router.push("/platform/organizations");
+          }}
+          onSearchFocus={() => {
+            if (
+              activePage !== "Organization Management" &&
+              activePage !== "Registration & Approvals"
+            ) {
+              router.push("/platform/organizations");
+            }
+          }}
+          onOpenMobileMenu={() => setMobileMenu(true)}
+          pendingCount={counts.pending}
+          notificationsOpen={showNotifications}
+          onToggleNotifications={() => setShowNotifications((value) => !value)}
+          onNavigate={navigate}
+          onProfileClick={() =>
+            setNotice(
+              "Global Administrator profile and secure session management will be connected during authentication implementation.",
+            )
+          }
+        />
 
         <div className="page-content">
           <div className="demo-banner">
