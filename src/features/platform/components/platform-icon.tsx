@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-function Icon({
+export function Icon({
   children,
   className = "",
 }: {
