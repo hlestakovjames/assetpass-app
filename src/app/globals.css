@@ -2719,3 +2719,163 @@ select,
 textarea {
   font-family: inherit;
 }
+
+
+/* -------------------------------------------------------
+   Enterprise design system: spacing and component rhythm
+   ------------------------------------------------------- */
+
+:root {
+  --control-height-sm: 2.125rem;
+  --control-height-md: 2.375rem;
+  --control-height-lg: 2.625rem;
+  --content-gutter: clamp(1rem, 2.1vw, 2.0625rem);
+  --section-gap: var(--space-5);
+  --card-padding: var(--space-5);
+  --card-radius: var(--radius-lg);
+  --control-radius: var(--radius-md);
+}
+
+/* Shared surface treatment */
+.metric-card,
+.panel {
+  border-radius: var(--card-radius);
+  box-shadow: var(--shadow-card);
+}
+
+.metric-card {
+  padding: var(--card-padding);
+}
+
+.panel-heading {
+  gap: var(--space-4);
+  padding: var(--space-4) var(--card-padding);
+}
+
+.panel-footer {
+  padding: var(--space-3) var(--card-padding);
+}
+
+.metrics-grid,
+.operations-grid {
+  gap: var(--section-gap);
+  margin-bottom: var(--section-gap);
+}
+
+.register-panel {
+  margin-bottom: var(--section-gap);
+}
+
+/* Consistent control geometry */
+.button {
+  min-height: var(--control-height-md);
+  padding-inline: var(--space-4);
+  border-radius: var(--control-radius);
+}
+
+.button-small {
+  min-height: var(--control-height-sm);
+  padding-inline: var(--space-3);
+}
+
+.icon-button,
+.modal-close {
+  border-radius: var(--control-radius);
+}
+
+.global-search,
+.table-search,
+.status-select,
+.form-field input,
+.form-field select,
+.form-field textarea {
+  border-radius: var(--control-radius);
+}
+
+.global-search {
+  min-height: var(--control-height-md);
+}
+
+.table-search,
+.status-select {
+  min-height: var(--control-height-md);
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  min-height: var(--control-height-lg);
+  padding: var(--space-2) var(--space-3);
+}
+
+.form-field textarea {
+  resize: vertical;
+}
+
+/* Tables and status indicators */
+.asset-table th {
+  padding-block: var(--space-3);
+  font-size: var(--font-size-xs);
+}
+
+.asset-table td {
+  padding-block: var(--space-3);
+  font-size: var(--font-size-sm);
+}
+
+.status-badge {
+  border-radius: var(--radius-sm);
+  padding: 0.3125rem var(--space-2);
+  line-height: var(--line-height-tight);
+}
+
+.small-label {
+  border-radius: var(--radius-sm);
+}
+
+/* Consistent keyboard and pointer feedback */
+button,
+[role="button"],
+select,
+input,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.button:disabled,
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* Preserve the existing responsive layout while using shared gutters. */
+@media (max-width: 1250px) {
+  .metrics-grid,
+  .operations-grid {
+    gap: var(--space-3);
+  }
+}
+
+@media (max-width: 760px) {
+  .page-content {
+    padding-right: var(--space-4);
+    padding-left: var(--space-4);
+  }
+
+  .panel-heading {
+    padding-right: var(--space-4);
+    padding-left: var(--space-4);
+  }
+
+  .metric-card {
+    padding: var(--space-4);
+  }
+}
