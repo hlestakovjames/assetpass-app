@@ -12,7 +12,7 @@ export type Organization = {
   users: number;
 };
 
-const initialOrganizations: Organization[] = [
+export const initialOrganizations: Organization[] = [
   {
     id: "ORG-0001",
     name: "Nairobi Business College",
