@@ -12,7 +12,7 @@ type PlatformHeaderProps = {
   notificationsOpen: boolean;
   onToggleNotifications: () => void;
   onNavigate: (label: string) => void;
-  onProfileClick: () => void;
+  onProfileClick: (message: string) => void;
 };
 
 export function PlatformHeader({
@@ -53,7 +53,6 @@ export function PlatformHeader({
                 value={query}
                 onChange={(event) => {
                   onQueryChange(event.target.value);
-                  onSearchFocus();
                 }}
                 onFocus={() => {
                   if (
