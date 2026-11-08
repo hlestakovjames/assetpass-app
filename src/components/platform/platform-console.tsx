@@ -3,15 +3,15 @@
 import { useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useOrganizationDemo } from "@/features/organizations/organization-demo-provider";
-import { ActivityList, type Activity } from "@/features/platform/components/activity-list";
-import { OrganizationTable } from "@/features/platform/components/organization-table";
+import { ActivityList, type Activity } from "@/components/platform/activity-list";
+import { OrganizationTable } from "@/components/platform/organization-table";
 import type { Organization, OrgStatus, ReviewAction } from "@/features/organizations/demo-data";
 import type { FormEvent } from "react";
 import { EmptyState } from "@/components/empty-state";
 import { FormField } from "@/components/form-field";
 import { PlatformShell } from "@/components/platform/platform-shell";
-import { PlatformSidebar } from "@/features/platform/components/platform-sidebar";
-import { PlatformHeader } from "@/features/platform/components/platform-header";
+import { PlatformSidebar } from "@/components/platform/platform-sidebar";
+import { PlatformHeader } from "@/components/platform/platform-header";
 
 type ModuleDefinition = {
   icon: string;
