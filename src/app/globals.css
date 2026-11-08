@@ -2879,3 +2879,117 @@ button:disabled {
     padding: var(--space-4);
   }
 }
+
+
+/* Enterprise form validation and interaction states */
+.form-field input:focus-visible,
+.form-field select:focus-visible,
+.form-field textarea:focus-visible,
+.table-search:focus-within {
+  border-color: var(--teal);
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+
+.form-field input[aria-invalid="true"],
+.form-field select[aria-invalid="true"],
+.form-field textarea[aria-invalid="true"],
+.form-field-invalid input,
+.form-field-invalid select,
+.form-field-invalid textarea {
+  border-color: #d45d55;
+}
+
+.form-field input[aria-invalid="true"]:focus-visible,
+.form-field select[aria-invalid="true"]:focus-visible,
+.form-field textarea[aria-invalid="true"]:focus-visible,
+.form-field-invalid input:focus-visible,
+.form-field-invalid select:focus-visible,
+.form-field-invalid textarea:focus-visible {
+  outline-color: rgb(212 93 85 / 25%);
+}
+
+.form-field-hint,
+.form-field-error {
+  display: block;
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-normal);
+}
+
+.form-field-hint {
+  color: var(--text-muted, #8493a0);
+}
+
+.form-field-error {
+  color: #c64f48;
+  font-weight: 600;
+}
+
+.form-field input:disabled,
+.form-field select:disabled,
+.form-field textarea:disabled,
+.table-search input:disabled,
+.status-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background: var(--surface-raised, #f5f7f9);
+}
+
+.table-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-dark, #cbd5df) transparent;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: -3px;
+}
+
+.asset-table tbody tr:focus-within {
+  background: var(--surface-hover, #f4f8f8);
+}
+
+.asset-table button:focus-visible,
+.organization-actions button:focus-visible {
+  position: relative;
+  z-index: 1;
+}
+
+.button[aria-busy="true"] {
+  cursor: progress;
+  pointer-events: none;
+}
+
+html[data-theme="dark"] .form-field-hint {
+  color: var(--text-muted);
+}
+
+html[data-theme="dark"] .form-field-error {
+  color: #f08f87;
+}
+
+html[data-theme="dark"] .form-field input[aria-invalid="true"],
+html[data-theme="dark"] .form-field select[aria-invalid="true"],
+html[data-theme="dark"] .form-field textarea[aria-invalid="true"],
+html[data-theme="dark"] .form-field-invalid input,
+html[data-theme="dark"] .form-field-invalid select,
+html[data-theme="dark"] .form-field-invalid textarea {
+  border-color: #d97870;
+}
+
+@media (max-width: 760px) {
+  .table-scroll {
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .register-toolbar {
+    align-items: stretch;
+  }
+
+  .table-search,
+  .register-toolbar .status-select {
+    width: 100%;
+    min-width: 0;
+  }
+}
