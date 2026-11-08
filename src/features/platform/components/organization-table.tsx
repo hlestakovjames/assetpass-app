@@ -1,7 +1,7 @@
 import { OrganizationStatus } from "@/features/platform/components/organization-status";
 import type { Organization, ReviewAction } from "@/features/organizations/demo-data";
 
-function OrganizationTable({
+export function OrganizationTable({
   organizations,
   onReview,
 }: {
