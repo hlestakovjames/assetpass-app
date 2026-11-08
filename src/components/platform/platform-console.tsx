@@ -11,6 +11,7 @@ import type { FormEvent } from "react";
 import { ThemeSelector } from "@/components/theme-selector";
 import { EmptyState } from "@/components/empty-state";
 import { FormField } from "@/components/form-field";
+import { PlatformShell } from "@/components/platform/platform-shell";
 
 type NavItem = {
   label: string;
@@ -411,15 +412,7 @@ export function PlatformConsole() {
   const moduleDefinition = moduleDefinitions[activePage] ?? (activePage !== "Global Overview" && activePage !== "Organization Management" && activePage !== "Registration & Approvals" ? { icon: "◈", heading: activePage, description: pageInfo.subtitle, areas: ["Module workspace structure", "Authorized administrative actions", "Review history and accountability", "Backend integration pending"] } : undefined);
 
   return (
-    <div className="app-shell">
-      {mobileMenu && (
-        <button
-          className="mobile-backdrop"
-          aria-label="Close navigation"
-          onClick={() => setMobileMenu(false)}
-        />
-      )}
-
+    <PlatformShell mobileMenuOpen={mobileMenu} onCloseMobileMenu={() => setMobileMenu(false)}>
       <aside className={`sidebar ${mobileMenu ? "sidebar-open" : ""}`}>
         <button
           className="brand"
@@ -1168,7 +1161,7 @@ export function PlatformConsole() {
           </section>
         </div>
       )}
-    </div>
+    </PlatformShell>
   );
 }
 
