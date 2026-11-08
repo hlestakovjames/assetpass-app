@@ -17,13 +17,6 @@ export function FormField({
   htmlFor,
   children,
 }: FormFieldProps) {
-  const describedBy = [
-    hint ? `${htmlFor ?? "form-field"}-hint` : null,
-    error ? `${htmlFor ?? "form-field"}-error` : null,
-  ]
-    .filter(Boolean)
-    .join(" ");
-
   return (
     <label className={`form-field${error ? " form-field-invalid" : ""}`} htmlFor={htmlFor}>
       <span>
@@ -41,7 +34,6 @@ export function FormField({
           {error}
         </small>
       )}
-      {describedBy && children && null}
     </label>
   );
 }
