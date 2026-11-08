@@ -8,7 +8,7 @@ export type Activity = {
   type: string;
 };
 
-function ActivityList({ activities }: { activities: Activity[] }) {
+export function ActivityList({ activities }: { activities: Activity[] }) {
   return (
     <div className="activity-list">
       {activities.map((activity) => (
