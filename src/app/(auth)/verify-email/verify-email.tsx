@@ -9,16 +9,12 @@ import styles from "../login/login.module.css";
 export function VerifyEmail() {
   const params = useSearchParams();
   const token = params.get("token");
-  const [message, setMessage] = useState("Checking your verification link...");
-  const [error, setError] = useState(false);
+  const [message, setMessage] = useState(token ? "Checking your verification link..." : "This verification link is missing its token. Request another email from the registration page.");
+  const [error, setError] = useState(!token);
 
   useEffect(() => {
     let active = true;
-    if (!token) {
-      setMessage("This verification link is missing its token. Request another email from the registration page.");
-      setError(true);
-      return () => { active = false; };
-    }
+    if (!token) return () => { active = false; };
     verifyEmailAddress(token).then((result) => {
       if (active) setMessage(result.message);
     }).catch((reason: unknown) => {
