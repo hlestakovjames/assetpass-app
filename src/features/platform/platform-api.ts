@@ -18,11 +18,17 @@ export type PlatformOrganization = {
   decisionNote: string | null;
 };
 
+export type UserApprovalStatus = "pending_review" | "approved" | "rejected";
+
 export type PlatformUser = {
   id: string;
   fullName: string;
   email: string;
   status: "active" | "inactive" | "suspended";
+  approvalStatus: UserApprovalStatus;
+  approvalReviewedAt: string | null;
+  approvalNote: string | null;
+  emailVerifiedAt: string | null;
   lastLoginAt: string | null;
   createdAt: string;
   deactivatedAt: string | null;
