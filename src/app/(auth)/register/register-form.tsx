@@ -44,7 +44,7 @@ const organizationSteps = [
   { title: "Organization identity", description: "Provide the organization's official and public identity." },
   { title: "Legal registration", description: "Add legal registration details where they apply." },
   { title: "Official contacts", description: "Provide contact channels that represent the organization." },
-  { title: "Organization location", description: "A physical operating address is required for organization registration." },
+  { title: "Organization location", description: "Select the country and operating location. The registration authority options follow the selected country." },
   { title: "Registration authority", description: "Confirm your relationship with the organization." },
   { title: "Account security", description: "Create the primary contact's AssetPass login credentials." },
   { title: "Review and submit", description: "Review the primary contact and organization information." },
@@ -90,7 +90,6 @@ const organizationFields: Record<number, RegistrationField[]> = {
   3: [
     { key: "legalStructure", label: "Legal structure", options: LEGAL_STRUCTURE_OPTIONS, allowOther: true },
     { key: "registrationNumber", label: "Registration number", hint: "Optional for organization types without formal registration." },
-    { key: "registrationAuthority", label: "Registration authority", allowOther: true },
     { key: "registrationDate", label: "Date of registration", type: "date" },
     { key: "taxIdentifier", label: "Tax identifier (optional)" },
   ],
@@ -102,6 +101,7 @@ const organizationFields: Record<number, RegistrationField[]> = {
   ],
   5: [
     { key: "countryCode", label: "Country", required: true },
+    { key: "registrationAuthority", label: "Registration authority", allowOther: true, hint: "Choose the authority that registered the organization in the selected country, or enter it manually." },
     { key: "county", label: "County / region" },
     { key: "city", label: "City / town" },
     { key: "physicalAddress", label: "Physical operating address", required: true },
