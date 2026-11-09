@@ -41,7 +41,7 @@ export function RolesPermissionsManagement() {
   }, []);
 
   useEffect(() => {
-    if (!selectedUserId) { setSelectedKeys([]); return; }
+    if (!selectedUserId) return;
     platformApi.administratorPermissions(selectedUserId)
       .then((grants) => setSelectedKeys(grants.map((grant) => grant.key)))
       .catch((e: unknown) => setError(e instanceof Error ? e.message : "Unable to load administrator permissions."));
