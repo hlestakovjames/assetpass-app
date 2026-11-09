@@ -242,7 +242,7 @@ export function RegisterForm() {
     setRegions([]);
     setCities([]);
     getRegistrationRegions(values.countryName, controller.signal)
-      .then(setRegions)
+      .then((items) => { setRegions(items); setLocationError(""); })
       .catch((cause: unknown) => {
         if (!controller.signal.aborted) {
           setLocationError(cause instanceof Error ? cause.message : "County or region data is unavailable. You can enter it manually.");
@@ -263,7 +263,7 @@ export function RegisterForm() {
     setCitiesLoading(true);
     setCities([]);
     getRegistrationCities(values.countryName, values.county, controller.signal)
-      .then(setCities)
+      .then((items) => { setCities(items); setLocationError(""); })
       .catch((cause: unknown) => {
         if (!controller.signal.aborted) {
           setLocationError(cause instanceof Error ? cause.message : "City and town data is unavailable. You can enter it manually.");
@@ -495,7 +495,7 @@ export function RegisterForm() {
               <div className={styles.field} key={field.key}>
                 <label htmlFor="county">County / region (optional)</label>
                 <div className={styles.inputWrap}>
-                  <select id="county" name="county" value={manualCounty ? "__other__" : values.county ?? ""} onChange={(event) => selectRegion(event.target.value)} disabled={submitting || regionsLoading || !values.countryName} style={{ width: "100%", border: 0, background: "transparent", color: "#123047", minHeight: 48 }}>
+                  <select id="county" name="county" value={manualCounty ? "__other__" : values.county ?? ""} onChange={(event) => selectRegion(event.target.value)} disabled={submitting || regionsLoading} style={{ width: "100%", border: 0, background: "transparent", color: "#123047", minHeight: 48 }}>
                     <option value="">Select county / region</option>
                     {regions.map((region) => <option key={region} value={region}>{region}</option>)}
                     <option value="__other__">Other / enter manually</option>
