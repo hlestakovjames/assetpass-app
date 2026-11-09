@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { organizationApi, type OrganizationContext } from "@/features/organizations/organization-api";
+import { MobileWorkspaceNavigation } from "@/components/shared/mobile-workspace-navigation";
 
 export function OrganizationWorkspaceHome() {
   const [organizations, setOrganizations] = useState<OrganizationContext[]>([]);
@@ -21,7 +22,7 @@ export function OrganizationWorkspaceHome() {
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="border-b border-slate-200 bg-white"><div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5"><Link href="/organization/overview" className="text-lg font-bold">Asset<span className="text-teal-600">Pass</span></Link><Link href="/individual/overview" className="text-sm font-medium text-slate-600 hover:text-slate-950">Individual workspace</Link></div></header>
+      <header className="border-b border-slate-200 bg-white"><div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-5 sm:py-5"><div className="flex items-center gap-3"><MobileWorkspaceNavigation workspaceLabel="Organization workspace" links={[{ href: "/organization/overview", label: "Your organizations" }, { href: "/individual/overview", label: "Individual workspace" }]} /><Link href="/organization/overview" className="text-lg font-bold">Asset<span className="text-teal-600">Pass</span></Link></div><Link href="/individual/overview" className="hidden text-sm font-medium text-slate-600 hover:text-slate-950 sm:inline">Individual workspace</Link></div></header>
       <div className="mx-auto max-w-6xl px-5 py-10">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-700">Organization workspace</p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight">Your organizations</h1>
