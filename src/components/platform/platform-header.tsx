@@ -91,6 +91,11 @@ export function PlatformHeader({
     }
   }
 
+  function requestLogout() {
+    setAccountMenuOpen(true);
+    setConfirmLogout(true);
+  }
+
   const displayName = user?.fullName || "Authenticated user";
   const initials = getInitials(displayName);
 
@@ -170,6 +175,17 @@ export function PlatformHeader({
         </div>
 
         <div className="topbar-divider" />
+
+        <button
+          className="topbar-signout"
+          type="button"
+          aria-label="Sign out of AssetPass"
+          disabled={signingOut}
+          onClick={requestLogout}
+        >
+          <span aria-hidden="true">↪</span>
+          <span>Sign out</span>
+        </button>
 
         <div className="profile-menu-wrap" ref={accountMenuRef}>
           <button

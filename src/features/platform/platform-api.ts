@@ -18,11 +18,17 @@ export type PlatformOrganization = {
   decisionNote: string | null;
 };
 
+export type UserApprovalStatus = "pending_review" | "approved" | "rejected";
+
 export type PlatformUser = {
   id: string;
   fullName: string;
   email: string;
   status: "active" | "inactive" | "suspended";
+  approvalStatus: UserApprovalStatus;
+  approvalReviewedAt: string | null;
+  approvalNote: string | null;
+  emailVerifiedAt: string | null;
   lastLoginAt: string | null;
   createdAt: string;
   deactivatedAt: string | null;
@@ -59,6 +65,11 @@ export const platformApi = {
       body: JSON.stringify({ status, note }),
     }),
   users: () => request<PlatformUser[]>("/platform/users"),
+  reviewUser: (id: string, decision: "approve" | "reject", note?: string) =>
+    request<Pick<PlatformUser, "id" | "fullName" | "email" | "status" | "approvalStatus" | "emailVerifiedAt" | "approvalReviewedAt" | "approvalNote">>(`/platform/users/${id}/approval`, {
+      method: "PATCH",
+      body: JSON.stringify({ decision, note }),
+    }),
   administrators: () => request<Array<{ roleId: string; user: Pick<PlatformUser, "id" | "fullName" | "email" | "status">; permissionKeys: string[] }>>("/platform/administrators"),
   assignAdministrator: (userId: string, reason: string) =>
     request<{ roleId: string; userId: string; role: string }>("/platform/administrators", {

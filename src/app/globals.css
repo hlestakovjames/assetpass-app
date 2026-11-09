@@ -433,6 +433,33 @@ button:disabled {
   gap: 18px;
 }
 
+.topbar-signout {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 11px;
+  border: 1px solid #f0dada;
+  border-radius: 7px;
+  background: #fff;
+  color: var(--red);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background 140ms ease, border-color 140ms ease;
+}
+
+.topbar-signout:hover {
+  border-color: #e8bcbc;
+  background: var(--red-bg);
+}
+
+.topbar-signout:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
 .global-search {
   display: flex;
   width: min(310px, 27vw);
@@ -1933,6 +1960,13 @@ button:disabled {
 
   .topbar-actions {
     gap: 7px;
+  }
+
+  .topbar-signout {
+    min-height: 30px;
+    gap: 4px;
+    padding: 0 7px;
+    font-size: 10px;
   }
 
   .global-search {
