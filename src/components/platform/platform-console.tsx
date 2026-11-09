@@ -426,7 +426,6 @@ export function PlatformConsole() {
           notificationsOpen={showNotifications}
           onToggleNotifications={() => setShowNotifications((value) => !value)}
           onNavigate={navigate}
-          onProfileClick={(message) => setNotice(message)}
         />
 
         <div className="page-content">
