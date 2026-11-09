@@ -383,6 +383,7 @@ export type RegistrationInput = {
   registrationRelationship?: string;
   authorityConfirmation?: string;
   termsAccepted: boolean;
+  privacyNoticeAcknowledged: boolean;
 };
 
 export async function registerAccount(input: RegistrationInput): Promise<{ message: string }> {
