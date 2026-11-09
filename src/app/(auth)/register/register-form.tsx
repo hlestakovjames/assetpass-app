@@ -1,12 +1,34 @@
 "use client";
 
-import { FormEvent, useMemo, useRef, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { registerAccount, type RegistrationInput } from "@/features/authentication/auth-client";
+import {
+  CONTACT_POSITION_OPTIONS,
+  INDUSTRY_SECTOR_OPTIONS,
+  LEGAL_STRUCTURE_OPTIONS,
+  ORGANIZATION_RELATIONSHIP_OPTIONS,
+  ORGANIZATION_TYPE_OPTIONS,
+  REGISTRATION_AUTHORITY_OPTIONS,
+  getRegistrationCities,
+  getRegistrationCountries,
+  getRegistrationRegions,
+  type RegistrationCountry,
+} from "@/features/authentication/registration-reference-data";
 import styles from "../login/login.module.css";
 
 type AccountType = "individual" | "organization";
 type FormValues = Record<string, string>;
+type RegistrationField = {
+  key: string;
+  label: string;
+  type?: string;
+  required?: boolean;
+  hint?: string;
+  auto?: string;
+  options?: string[];
+  allowOther?: boolean;
+};
 
 const individualSteps = [
   { title: "Personal identity", description: "Tell us who will own and manage assets in AssetPass." },
@@ -28,7 +50,7 @@ const organizationSteps = [
   { title: "Review and submit", description: "Review the primary contact and organization information." },
 ];
 
-const individualFields: Record<number, Array<{ key: string; label: string; type?: string; required?: boolean; hint?: string; auto?: string }>> = {
+const individualFields: Record<number, RegistrationField[]> = {
   1: [
     { key: "firstName", label: "First name", required: true, auto: "given-name" },
     { key: "middleName", label: "Middle name", auto: "additional-name" },
@@ -40,37 +62,35 @@ const individualFields: Record<number, Array<{ key: string; label: string; type?
     { key: "alternativePhone", label: "Alternative phone number", type: "tel" },
   ],
   3: [
-    { key: "countryCode", label: "Country code", required: true, hint: "Use the two-letter ISO code, e.g. KE for Kenya." },
+    { key: "countryCode", label: "Country", required: true },
     { key: "county", label: "County / region" },
     { key: "city", label: "City / town" },
     { key: "physicalAddress", label: "Physical / residential address", hint: "Optional for individual accounts." },
     { key: "postalAddress", label: "Postal address" },
   ],
-  4: [
-    { key: "occupation", label: "Occupation / profession" },
-  ],
+  4: [{ key: "occupation", label: "Occupation / profession" }],
 };
 
-const organizationFields: Record<number, Array<{ key: string; label: string; type?: string; required?: boolean; hint?: string; auto?: string }>> = {
+const organizationFields: Record<number, RegistrationField[]> = {
   1: [
     { key: "firstName", label: "Your first name", required: true, auto: "given-name" },
     { key: "middleName", label: "Your middle name" },
     { key: "lastName", label: "Your last name", required: true, auto: "family-name" },
-    { key: "position", label: "Your position / designation", required: true, hint: "For example: Director, Operations Manager, ICT Officer." },
+    { key: "position", label: "Your position / designation", required: true, options: CONTACT_POSITION_OPTIONS, allowOther: true },
     { key: "email", label: "Your login email", type: "email", required: true, auto: "email" },
     { key: "phoneNumber", label: "Your mobile phone number", type: "tel", required: true, auto: "tel" },
   ],
   2: [
     { key: "organizationDisplayName", label: "Organization display name", required: true },
     { key: "legalName", label: "Full legal name" },
-    { key: "organizationType", label: "Organization type", required: true, hint: "Examples: Company, NGO, Government institution, School, Partnership, Sole proprietorship." },
-    { key: "industrySector", label: "Industry / sector", required: true },
+    { key: "organizationType", label: "Organization type", required: true, options: ORGANIZATION_TYPE_OPTIONS, allowOther: true },
+    { key: "industrySector", label: "Industry / sector", required: true, options: INDUSTRY_SECTOR_OPTIONS, allowOther: true },
     { key: "description", label: "Organization description" },
   ],
   3: [
-    { key: "legalStructure", label: "Legal structure", hint: "For example: Limited company, registered society, public institution." },
+    { key: "legalStructure", label: "Legal structure", options: LEGAL_STRUCTURE_OPTIONS, allowOther: true },
     { key: "registrationNumber", label: "Registration number", hint: "Optional for organization types without formal registration." },
-    { key: "registrationAuthority", label: "Registration authority" },
+    { key: "registrationAuthority", label: "Registration authority", allowOther: true },
     { key: "registrationDate", label: "Date of registration", type: "date" },
     { key: "taxIdentifier", label: "Tax identifier (optional)" },
   ],
@@ -81,7 +101,7 @@ const organizationFields: Record<number, Array<{ key: string; label: string; typ
     { key: "website", label: "Organization website", type: "url", hint: "Include https:// where available." },
   ],
   5: [
-    { key: "countryCode", label: "Country code", required: true, hint: "Use the two-letter ISO code, e.g. KE." },
+    { key: "countryCode", label: "Country", required: true },
     { key: "county", label: "County / region" },
     { key: "city", label: "City / town" },
     { key: "physicalAddress", label: "Physical operating address", required: true },
@@ -89,33 +109,69 @@ const organizationFields: Record<number, Array<{ key: string; label: string; typ
     { key: "postalCode", label: "Postal code" },
   ],
   6: [
-    { key: "registrationRelationship", label: "Your relationship to the organization", required: true, hint: "For example: Owner, Director, Authorized representative, Employee." },
+    { key: "registrationRelationship", label: "Your relationship to the organization", required: true, options: ORGANIZATION_RELATIONSHIP_OPTIONS, allowOther: true },
   ],
 };
 
-function Field({ field, value, onChange, disabled }: {
-  field: { key: string; label: string; type?: string; required?: boolean; hint?: string; auto?: string };
+function Field({ field, value, onChange, otherValue, onOtherChange, disabled }: {
+  field: RegistrationField;
   value: string;
   onChange: (value: string) => void;
+  otherValue?: string;
+  onOtherChange?: (value: string) => void;
   disabled: boolean;
 }) {
+  const isOther = field.allowOther && value === "Other";
+  const options = field.key === "registrationAuthority"
+    ? (REGISTRATION_AUTHORITY_OPTIONS["KE"] ?? ["Other"])
+    : field.options;
+
   return (
     <div className={styles.field}>
       <label htmlFor={field.key}>{field.label}{field.required ? " *" : " (optional)"}</label>
       <div className={styles.inputWrap}>
-        <input
-          id={field.key}
-          name={field.key}
-          data-step-field="true"
-          type={field.type ?? "text"}
-          autoComplete={field.auto}
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          required={field.required}
-          disabled={disabled}
-          maxLength={field.key === "email" || field.key === "contactEmail" ? 320 : 500}
-        />
+        {options ? (
+          <select
+            id={field.key}
+            name={field.key}
+            data-step-field="true"
+            value={value}
+            onChange={(event) => onChange(event.target.value)}
+            required={field.required}
+            disabled={disabled}
+            style={{ width: "100%", border: 0, background: "transparent", color: "#123047", minHeight: 48 }}
+          >
+            <option value="">Select {field.label.toLowerCase()}</option>
+            {options.map((option) => <option key={option} value={option}>{option === "Other" ? "Other / enter manually" : option}</option>)}
+          </select>
+        ) : (
+          <input
+            id={field.key}
+            name={field.key}
+            data-step-field="true"
+            type={field.type ?? "text"}
+            autoComplete={field.auto}
+            value={value}
+            onChange={(event) => onChange(event.target.value)}
+            required={field.required}
+            disabled={disabled}
+            maxLength={field.key === "email" || field.key === "contactEmail" ? 320 : 500}
+          />
+        )}
       </div>
+      {isOther && (
+        <div className={styles.inputWrap}>
+          <input
+            aria-label={`Enter ${field.label.toLowerCase()}`}
+            value={otherValue ?? ""}
+            onChange={(event) => onOtherChange?.(event.target.value)}
+            placeholder={`Enter ${field.label.toLowerCase()}`}
+            required={field.required}
+            disabled={disabled}
+            maxLength={500}
+          />
+        </div>
+      )}
       {field.hint && <p className={styles.formNote} style={{ textAlign: "left", marginTop: 0 }}>{field.hint}</p>}
     </div>
   );
@@ -124,7 +180,18 @@ function Field({ field, value, onChange, disabled }: {
 export function RegisterForm() {
   const [accountType, setAccountType] = useState<AccountType | null>(null);
   const [step, setStep] = useState(0);
-  const [values, setValues] = useState<FormValues>({ countryCode: "KE", preferredContactMethod: "email" });
+  const [values, setValues] = useState<FormValues>({
+    countryCode: "KE",
+    countryName: "Kenya",
+    preferredContactMethod: "email",
+  });
+  const [countries, setCountries] = useState<RegistrationCountry[]>([]);
+  const [regions, setRegions] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+  const [countriesLoading, setCountriesLoading] = useState(true);
+  const [regionsLoading, setRegionsLoading] = useState(false);
+  const [citiesLoading, setCitiesLoading] = useState(false);
+  const [locationError, setLocationError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
@@ -140,12 +207,113 @@ export function RegisterForm() {
       : individualFields[step + 1] ?? [];
   }, [accountType, step]);
 
+  useEffect(() => {
+    const controller = new AbortController();
+    getRegistrationCountries(controller.signal)
+      .then((items) => {
+        setCountries(items);
+        const kenya = items.find((country) => country.iso2 === "KE");
+        if (kenya) {
+          setValues((previous) => ({
+            ...previous,
+            countryCode: previous.countryCode || kenya.iso2,
+            countryName: previous.countryName || kenya.name,
+          }));
+        }
+      })
+      .catch((cause: unknown) => {
+        if (!controller.signal.aborted) {
+          setLocationError(cause instanceof Error ? cause.message : "Country list unavailable. You can enter an ISO country code manually.");
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setCountriesLoading(false);
+      });
+    return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    if (!values.countryName) {
+      setRegions([]);
+      setCities([]);
+      return;
+    }
+    const controller = new AbortController();
+    setRegionsLoading(true);
+    setRegions([]);
+    setCities([]);
+    getRegistrationRegions(values.countryName, controller.signal)
+      .then(setRegions)
+      .catch((cause: unknown) => {
+        if (!controller.signal.aborted) {
+          setLocationError(cause instanceof Error ? cause.message : "County or region data is unavailable. You can enter it manually.");
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setRegionsLoading(false);
+      });
+    return () => controller.abort();
+  }, [values.countryName]);
+
+  useEffect(() => {
+    if (!values.countryName || !values.county || values.county === "__other__") {
+      setCities([]);
+      return;
+    }
+    const controller = new AbortController();
+    setCitiesLoading(true);
+    setCities([]);
+    getRegistrationCities(values.countryName, values.county, controller.signal)
+      .then(setCities)
+      .catch((cause: unknown) => {
+        if (!controller.signal.aborted) {
+          setLocationError(cause instanceof Error ? cause.message : "City and town data is unavailable. You can enter it manually.");
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setCitiesLoading(false);
+      });
+    return () => controller.abort();
+  }, [values.countryName, values.county]);
+
   function setValue(key: string, value: string) {
     setValues((previous) => ({ ...previous, [key]: value }));
   }
 
+  function resolvedValue(key: string): string {
+    const value = values[key] ?? "";
+    return value === "Other" ? (values[`${key}Other`] ?? "").trim() : value === "__other__" ? (values[`${key}Other`] ?? "").trim() : value;
+  }
+
+  function selectCountry(code: string) {
+    const country = countries.find((item) => item.iso2 === code);
+    setValues((previous) => ({
+      ...previous,
+      countryCode: code,
+      countryName: country?.name ?? "",
+      county: "",
+      countyOther: "",
+      city: "",
+      cityOther: "",
+      registrationAuthority: "",
+      registrationAuthorityOther: "",
+    }));
+    setLocationError("");
+  }
+
+  function selectRegion(region: string) {
+    setValues((previous) => ({
+      ...previous,
+      county: region,
+      countyOther: "",
+      city: "",
+      cityOther: "",
+    }));
+    setLocationError("");
+  }
+
   function validateCurrentStep() {
-    const controls = Array.from(formRef.current?.querySelectorAll<HTMLInputElement>("[data-step-field]") ?? []);
+    const controls = Array.from(formRef.current?.querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-step-field]") ?? []);
     for (const control of controls) {
       if (!control.checkValidity()) {
         control.reportValidity();
@@ -192,8 +360,8 @@ export function RegisterForm() {
       phoneNumber: values.phoneNumber?.trim() ?? "",
       alternativePhone: values.alternativePhone?.trim() || undefined,
       countryCode: values.countryCode?.trim().toUpperCase() || "KE",
-      county: values.county?.trim() || undefined,
-      city: values.city?.trim() || undefined,
+      county: resolvedValue("county") || undefined,
+      city: resolvedValue("city") || undefined,
       physicalAddress: values.physicalAddress?.trim() || undefined,
       postalAddress: values.postalAddress?.trim() || undefined,
       occupation: values.occupation?.trim() || undefined,
@@ -205,11 +373,11 @@ export function RegisterForm() {
       Object.assign(payload, {
         organizationDisplayName: values.organizationDisplayName?.trim(),
         legalName: values.legalName?.trim() || undefined,
-        organizationType: values.organizationType?.trim(),
-        industrySector: values.industrySector?.trim(),
-        legalStructure: values.legalStructure?.trim() || undefined,
+        organizationType: resolvedValue("organizationType"),
+        industrySector: resolvedValue("industrySector"),
+        legalStructure: resolvedValue("legalStructure") || undefined,
         registrationNumber: values.registrationNumber?.trim() || undefined,
-        registrationAuthority: values.registrationAuthority?.trim() || undefined,
+        registrationAuthority: resolvedValue("registrationAuthority") || undefined,
         registrationDate: values.registrationDate || undefined,
         contactEmail: values.contactEmail?.trim().toLowerCase(),
         contactPhone: values.contactPhone?.trim(),
@@ -217,8 +385,8 @@ export function RegisterForm() {
         website: values.website?.trim() || undefined,
         description: values.description?.trim() || undefined,
         postalCode: values.postalCode?.trim() || undefined,
-        position: values.position?.trim(),
-        registrationRelationship: values.registrationRelationship?.trim(),
+        position: resolvedValue("position"),
+        registrationRelationship: resolvedValue("registrationRelationship"),
         authorityConfirmation: values.authorityConfirmation === "yes" ? "YES" : undefined,
       });
     }
@@ -267,6 +435,7 @@ export function RegisterForm() {
 
   const securityStep = accountType === "organization" ? 6 : 4;
   const reviewStep = steps.length - 1;
+  const registrationAuthorityOptions = REGISTRATION_AUTHORITY_OPTIONS[values.countryCode ?? "KE"] ?? ["Other"];
 
   return (
     <div className={styles.form}>
@@ -282,9 +451,95 @@ export function RegisterForm() {
         <p style={{ margin: 0, color: "#718293", fontSize: 12, lineHeight: 1.6 }}>{current.description}</p>
       </div>
       <form ref={formRef} className={styles.form} onSubmit={handleSubmit}>
-        {step < securityStep && fields.map((field) => (
-          <Field key={field.key} field={field} value={values[field.key] ?? ""} onChange={(value) => setValue(field.key, value)} disabled={submitting} />
-        ))}
+        {step < securityStep && fields.map((field) => {
+          if (field.key === "countryCode") {
+            return (
+              <div className={styles.field} key={field.key}>
+                <label htmlFor="countryCode">Country *</label>
+                <div className={styles.inputWrap}>
+                  {countries.length > 0 ? (
+                    <select id="countryCode" name="countryCode" data-step-field="true" required value={values.countryCode ?? "KE"} onChange={(event) => selectCountry(event.target.value)} disabled={submitting || countriesLoading} style={{ width: "100%", border: 0, background: "transparent", color: "#123047", minHeight: 48 }}>
+                      <option value="">Select country</option>
+                      {countries.map((country) => <option key={country.iso2} value={country.iso2}>{country.name}</option>)}
+                    </select>
+                  ) : (
+                    <input id="countryCode" name="countryCode" data-step-field="true" required maxLength={2} minLength={2} value={values.countryCode ?? "KE"} onChange={(event) => setValue("countryCode", event.target.value.toUpperCase())} disabled={submitting} placeholder="ISO country code (e.g. KE)" />
+                  )}
+                </div>
+                {countriesLoading && <p className={styles.formNote}>Loading country list…</p>}
+                {locationError && <p className={styles.formNote} role="status">{locationError}</p>}
+              </div>
+            );
+          }
+          if (field.key === "county") {
+            const manualCounty = values.county === "__other__";
+            return (
+              <div className={styles.field} key={field.key}>
+                <label htmlFor="county">County / region (optional)</label>
+                <div className={styles.inputWrap}>
+                  <select id="county" name="county" value={manualCounty ? "__other__" : values.county ?? ""} onChange={(event) => selectRegion(event.target.value)} disabled={submitting || regionsLoading || !values.countryName} style={{ width: "100%", border: 0, background: "transparent", color: "#123047", minHeight: 48 }}>
+                    <option value="">Select county / region</option>
+                    {regions.map((region) => <option key={region} value={region}>{region}</option>)}
+                    <option value="__other__">Other / enter manually</option>
+                  </select>
+                </div>
+                {manualCounty && <div className={styles.inputWrap}><input aria-label="Enter county or region" placeholder="Enter county / region" value={values.countyOther ?? ""} onChange={(event) => setValue("countyOther", event.target.value)} disabled={submitting} maxLength={160} /></div>}
+                {regionsLoading && <p className={styles.formNote}>Loading counties / regions…</p>}
+              </div>
+            );
+          }
+          if (field.key === "city") {
+            const manualCity = values.city === "__other__" || values.county === "__other__" || (Boolean(values.county) && regions.length === 0);
+            return (
+              <div className={styles.field} key={field.key}>
+                <label htmlFor="city">City / town (optional)</label>
+                {manualCity ? (
+                  <div className={styles.inputWrap}><input id="city" name="city" placeholder="Enter city / town" value={values.cityOther ?? (values.city === "__other__" ? "" : values.city ?? "")} onChange={(event) => setValue("cityOther", event.target.value)} disabled={submitting} maxLength={160} /></div>
+                ) : (
+                  <>
+                    <div className={styles.inputWrap}>
+                      <select id="city" name="city" value={values.city ?? ""} onChange={(event) => setValue("city", event.target.value === "__other__" ? "__other__" : event.target.value)} disabled={submitting || citiesLoading || !values.county} style={{ width: "100%", border: 0, background: "transparent", color: "#123047", minHeight: 48 }}>
+                        <option value="">Select city / town</option>
+                        {cities.map((city) => <option key={city} value={city}>{city}</option>)}
+                        <option value="__other__">Other / enter manually</option>
+                      </select>
+                    </div>
+                    {values.city === "__other__" && <div className={styles.inputWrap}><input aria-label="Enter city or town" placeholder="Enter city / town" value={values.cityOther ?? ""} onChange={(event) => setValue("cityOther", event.target.value)} disabled={submitting} maxLength={160} /></div>}
+                  </>
+                )}
+                {citiesLoading && <p className={styles.formNote}>Loading cities / towns…</p>}
+              </div>
+            );
+          }
+          if (field.key === "registrationAuthority") {
+            return (
+              <Field
+                key={field.key}
+                field={{ ...field, options: registrationAuthorityOptions }}
+                value={values.registrationAuthority ?? ""}
+                onChange={(value) => setValue("registrationAuthority", value)}
+                otherValue={values.registrationAuthorityOther}
+                onOtherChange={(value) => setValue("registrationAuthorityOther", value)}
+                disabled={submitting}
+              />
+            );
+          }
+          return (
+            <Field
+              key={field.key}
+              field={field}
+              value={values[field.key] ?? ""}
+              onChange={(value) => setValue(field.key, value)}
+              otherValue={values[`${field.key}Other`]}
+              onOtherChange={(value) => setValue(`${field.key}Other`, value)}
+              disabled={submitting}
+            />
+          );
+        })}
+
+        {(step === 2 && accountType === "individual" || step === 4 && accountType === "organization") && (
+          <p className={styles.formNote}>Location lists are provided by <a href="https://countriesnow.space/" target="_blank" rel="noreferrer">CountriesNow</a>. If a county, region, city or town is missing, choose “Other / enter manually”.</p>
+        )}
 
         {step === 1 && accountType === "individual" && (
           <div className={styles.field}>
@@ -330,16 +585,17 @@ export function RegisterForm() {
             <div><strong>Mobile:</strong> {values.phoneNumber}</div>
             {accountType === "individual" ? (
               <>
-                <div><strong>Location:</strong> {[values.city, values.county, values.countryCode].filter(Boolean).join(", ")}</div>
+                <div><strong>Location:</strong> {[resolvedValue("city"), resolvedValue("county"), values.countryName || values.countryCode].filter(Boolean).join(", ")}</div>
                 <div><strong>Occupation:</strong> {values.occupation || "Not provided"}</div>
               </>
             ) : (
               <>
                 <div><strong>Organization:</strong> {values.organizationDisplayName}</div>
-                <div><strong>Organization type:</strong> {values.organizationType}</div>
-                <div><strong>Industry:</strong> {values.industrySector}</div>
+                <div><strong>Organization type:</strong> {resolvedValue("organizationType")}</div>
+                <div><strong>Industry:</strong> {resolvedValue("industrySector")}</div>
                 <div><strong>Official email:</strong> {values.contactEmail}</div>
                 <div><strong>Official phone:</strong> {values.contactPhone}</div>
+                <div><strong>Location:</strong> {[resolvedValue("city"), resolvedValue("county"), values.countryName || values.countryCode].filter(Boolean).join(", ")}</div>
                 <div><strong>Physical address:</strong> {values.physicalAddress}</div>
                 <p style={{ margin: 0, padding: 12, borderRadius: 7, background: "#f1f6f8" }}>Your user account will be active immediately. The organization and its initial membership remain pending until platform review is complete.</p>
               </>
