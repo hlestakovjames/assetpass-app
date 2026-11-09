@@ -382,6 +382,7 @@ export type RegistrationInput = {
   position?: string;
   registrationRelationship?: string;
   authorityConfirmation?: string;
+  termsAccepted: boolean;
 };
 
 export async function registerAccount(input: RegistrationInput): Promise<{ message: string }> {
