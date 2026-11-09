@@ -30,8 +30,8 @@ export function LoginForm() {
     setSubmitting(true);
 
     try {
-      await login(normalizedEmail, password);
-      router.replace("/platform/overview");
+      const result = await login(normalizedEmail, password);
+      router.replace(result.user.defaultWorkspace?.href ?? "/individual/overview");
     } catch (err) {
       setError(
         err instanceof Error
