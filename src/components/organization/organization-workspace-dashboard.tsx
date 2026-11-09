@@ -2,12 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import { organizationApi, type OrganizationWorkspace } from "@/features/organizations/organization-api";
 
-export function OrganizationWorkspaceDashboard() {
-  const params = useParams<{ organizationId: string }>();
-  const organizationId = params.organizationId;
+export function OrganizationWorkspaceDashboard({ organizationId }: { organizationId: string }) {
   const [workspace, setWorkspace] = useState<OrganizationWorkspace | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
