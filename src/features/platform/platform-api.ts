@@ -59,6 +59,14 @@ export const platformApi = {
       body: JSON.stringify({ status, note }),
     }),
   users: () => request<PlatformUser[]>("/platform/users"),
+  administrators: () => request<Array<{ roleId: string; user: Pick<PlatformUser, "id" | "fullName" | "email" | "status">; permissionKeys: string[] }>>("/platform/administrators"),
+  assignAdministrator: (userId: string, reason: string) =>
+    request<{ roleId: string; userId: string; role: string }>("/platform/administrators", {
+      method: "POST",
+      body: JSON.stringify({ userId, reason }),
+    }),
+  revokeAdministrator: (userId: string) =>
+    request<{ userId: string; revoked: boolean }>(`/platform/administrators/${userId}`, { method: "DELETE" }),
   permissions: () => request<PlatformPermission[]>("/platform/permissions"),
   administratorPermissions: (userId: string) =>
     request<Array<Pick<PlatformPermission, "key" | "name">>>(`/platform/administrators/${userId}/permissions`),
