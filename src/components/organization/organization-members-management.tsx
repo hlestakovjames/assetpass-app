@@ -33,10 +33,22 @@ export function OrganizationMembersManagement() {
   }, [organizationId]);
 
   useEffect(() => {
-    reload()
-      .catch((reason: unknown) => setError(reason instanceof Error ? reason.message : "Unable to load organization members."))
-      .finally(() => setLoading(false));
-  }, [reload]);
+    let active = true;
+    Promise.all([organizationApi.workspace(organizationId), organizationApi.members(organizationId)])
+      .then(([nextWorkspace, nextMembers]) => {
+        if (active) {
+          setWorkspace(nextWorkspace);
+          setMembers(nextMembers);
+        }
+      })
+      .catch((reason: unknown) => {
+        if (active) setError(reason instanceof Error ? reason.message : "Unable to load organization members.");
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => { active = false; };
+  }, [organizationId]);
 
   async function invite() {
     if (!email.trim()) { setError("Enter the email address of an existing AssetPass user."); return; }
