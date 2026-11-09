@@ -1,6 +1,7 @@
 import { Suspense, type ReactNode } from "react";
 import { OrganizationDemoProvider } from "@/features/organizations/organization-demo-provider";
 import { AuthGuard } from "@/features/authentication/auth-guard";
+import { PlatformWorkspaceGuard } from "@/features/authentication/platform-workspace-guard";
 
 function PlatformLoadingState() {
   return (
@@ -21,11 +22,13 @@ export default function PlatformLayout({
 }) {
   return (
     <AuthGuard>
+      <PlatformWorkspaceGuard>
       <OrganizationDemoProvider>
         <Suspense fallback={<PlatformLoadingState />}>
           {children}
         </Suspense>
       </OrganizationDemoProvider>
+      </PlatformWorkspaceGuard>
     </AuthGuard>
   );
 }

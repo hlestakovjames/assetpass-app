@@ -1,11 +1,51 @@
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001/api/v1";
 
+export type IdentityOrganization = {
+  id: string;
+  displayName: string;
+  category: string;
+  status: string;
+  membership: {
+    id: string;
+    status: string;
+    createdAt: string;
+    joinedAt: string | null;
+  };
+  roles: Array<{ key: string; name: string }>;
+  permissions: string[];
+};
+
+export type AvailableWorkspace = {
+  type: "platform" | "individual" | "organization";
+  id?: string;
+  label: string;
+  href: string;
+};
+
 export type AuthenticatedUser = {
   id: string;
   fullName: string;
   email: string;
   status: string;
+  profile: {
+    firstName: string;
+    middleName: string | null;
+    lastName: string;
+    phoneNumber: string;
+    alternativePhone: string | null;
+    countryCode: string;
+    county: string | null;
+    city: string | null;
+    occupation: string | null;
+    preferredContactMethod: string;
+    profilePhotoUrl: string | null;
+  } | null;
+  platformRoles: string[];
+  platformPermissions: string[];
+  organizations: IdentityOrganization[];
+  availableWorkspaces: AvailableWorkspace[];
+  defaultWorkspace: AvailableWorkspace;
 };
 
 export type LoginResponse = {
