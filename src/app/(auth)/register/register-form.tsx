@@ -227,7 +227,9 @@ export function RegisterForm() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
-    if (!accountType || !validateCurrentStep()) return;
+    if (!accountType) return;
+    if (step !== reviewStep) { nextStep(); return; }
+    if (!validateCurrentStep()) return;
     setSubmitting(true);
     try {
       const result = await registerAccount(buildPayload());
