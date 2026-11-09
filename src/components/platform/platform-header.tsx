@@ -19,7 +19,7 @@ type PlatformHeaderProps = {
 };
 
 function getInitials(fullName: string) {
-  const parts = fullName.trim().split(/\\s+/).filter(Boolean);
+  const parts = fullName.trim().split(/\s+/).filter(Boolean);
 
   if (parts.length === 0) return "U";
   if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
