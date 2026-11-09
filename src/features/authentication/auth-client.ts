@@ -379,6 +379,9 @@ export type RegistrationInput = {
   description?: string;
   postalCode?: string;
   taxIdentifier?: string;
+  position?: string;
+  registrationRelationship?: string;
+  authorityConfirmation?: string;
 };
 
 export async function registerAccount(input: RegistrationInput): Promise<{ message: string }> {
