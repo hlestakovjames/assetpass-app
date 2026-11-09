@@ -24,7 +24,14 @@ export function OrganizationManagement({ pendingOnly = false }: { pendingOnly?: 
     }
   }, []);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    let active = true;
+    platformApi.organizations()
+      .then((records) => { if (active) setOrganizations(records); })
+      .catch((e: unknown) => { if (active) setError(e instanceof Error ? e.message : "Unable to load organizations."); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, []);
 
   const filtered = useMemo(() => organizations.filter((organization) => {
     const matchesStatus = statusFilter === "all" || organization.status === statusFilter;
