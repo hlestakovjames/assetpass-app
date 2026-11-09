@@ -349,9 +349,41 @@ export async function logoutAll(): Promise<void> {
 
 
 export type RegistrationInput = {
-  fullName: string;
+  accountType: "individual" | "organization";
+  firstName: string;
+  middleName?: string;
+  lastName: string;
   email: string;
   password: string;
+  phoneNumber: string;
+  alternativePhone?: string;
+  countryCode?: string;
+  county?: string;
+  city?: string;
+  physicalAddress?: string;
+  postalAddress?: string;
+  occupation?: string;
+  preferredContactMethod?: "email" | "phone";
+  organizationDisplayName?: string;
+  legalName?: string;
+  organizationType?: string;
+  industrySector?: string;
+  legalStructure?: string;
+  registrationNumber?: string;
+  registrationAuthority?: string;
+  registrationDate?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  alternativeEmail?: string;
+  website?: string;
+  description?: string;
+  postalCode?: string;
+  taxIdentifier?: string;
+  position?: string;
+  registrationRelationship?: string;
+  authorityConfirmation?: string;
+  termsAccepted: boolean;
+  privacyNoticeAcknowledged: boolean;
 };
 
 export async function registerAccount(input: RegistrationInput): Promise<{ message: string }> {
@@ -365,7 +397,7 @@ export async function registerAccount(input: RegistrationInput): Promise<{ messa
   if (!response.ok) {
     throw new Error(getErrorMessage(payload, "Unable to create your account. Please try again."));
   }
-  return { message: payload?.message ?? "If the address can be registered, a verification email will be sent shortly." };
+  return { message: payload?.message ?? "Registration successful. Your account is active and you can sign in now." };
 }
 
 export async function verifyEmailAddress(token: string): Promise<{ message: string }> {
