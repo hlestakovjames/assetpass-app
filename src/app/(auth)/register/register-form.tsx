@@ -471,8 +471,12 @@ export function RegisterForm() {
               <div className={styles.field} key={field.key}>
                 <label htmlFor="countryCode">Country *</label>
                 <div className={styles.inputWrap}>
-                  {countries.length > 0 ? (
-                    <select id="countryCode" name="countryCode" data-step-field="true" required value={values.countryCode ?? "KE"} onChange={(event) => selectCountry(event.target.value)} disabled={submitting || countriesLoading} style={{ width: "100%", border: 0, background: "transparent", color: "#123047", minHeight: 48 }}>
+                  {countriesLoading ? (
+                    <select id="countryCode" disabled value="" style={{ width: "100%", border: 0, background: "transparent", color: "#718293", minHeight: 48 }}>
+                      <option value="">Loading countries…</option>
+                    </select>
+                  ) : countries.length > 0 ? (
+                    <select id="countryCode" name="countryCode" data-step-field="true" required value={values.countryCode ?? "KE"} onChange={(event) => selectCountry(event.target.value)} disabled={submitting} style={{ width: "100%", border: 0, background: "transparent", color: "#123047", minHeight: 48 }}>
                       <option value="">Select country</option>
                       {countries.map((country) => <option key={country.iso2} value={country.iso2}>{country.name}</option>)}
                     </select>
