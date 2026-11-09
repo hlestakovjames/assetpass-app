@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import { organizationApi, type OrganizationMember, type OrganizationWorkspace } from "@/features/organizations/organization-api";
 import { useAuth } from "@/features/authentication/auth-provider";
 
@@ -12,9 +11,7 @@ const roleOptions = [
   { key: "organization_member", label: "Organization Member" },
 ];
 
-export function OrganizationMembersManagement() {
-  const params = useParams<{ organizationId: string }>();
-  const organizationId = params.organizationId;
+export function OrganizationMembersManagement({ organizationId }: { organizationId: string }) {
   const { user } = useAuth();
   const [workspace, setWorkspace] = useState<OrganizationWorkspace | null>(null);
   const [members, setMembers] = useState<OrganizationMember[]>([]);
