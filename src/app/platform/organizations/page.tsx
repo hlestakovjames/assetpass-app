@@ -1,5 +1,4 @@
-import { PlatformConsole } from "@/components/platform/platform-console";
-
+import { OrganizationManagement } from "@/components/platform/organization-management";
 export default function OrganizationsPage() {
-  return <PlatformConsole />;
+  return <OrganizationManagement />;
 }
