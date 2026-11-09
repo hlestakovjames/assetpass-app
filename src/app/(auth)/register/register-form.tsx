@@ -90,7 +90,6 @@ const organizationFields: Record<number, Array<{ key: string; label: string; typ
   ],
   6: [
     { key: "registrationRelationship", label: "Your relationship to the organization", required: true, hint: "For example: Owner, Director, Authorized representative, Employee." },
-    { key: "authorityConfirmation", label: "Authority confirmation", required: true, hint: "Enter YES to confirm that you are authorized to submit this registration on the organization's behalf." },
   ],
 };
 
@@ -154,8 +153,8 @@ export function RegisterForm() {
         return false;
       }
     }
-    if (accountType === "organization" && step === 5 && values.authorityConfirmation?.trim().toLowerCase() !== "yes") {
-      setError("Please enter YES to confirm that you are authorized to register this organization.");
+    if (accountType === "organization" && step === 5 && values.authorityConfirmation !== "yes") {
+      setError("Please confirm that you are authorized to submit this registration on the organization's behalf.");
       return false;
     }
     if (step === (accountType === "organization" ? 6 : 4)) {
@@ -199,6 +198,7 @@ export function RegisterForm() {
       postalAddress: values.postalAddress?.trim() || undefined,
       occupation: values.occupation?.trim() || undefined,
       preferredContactMethod: values.preferredContactMethod === "phone" ? "phone" : "email",
+      termsAccepted: values.acceptTerms === "yes",
     };
     if (accountType === "organization") {
       Object.assign(payload, {
@@ -218,7 +218,7 @@ export function RegisterForm() {
         postalCode: values.postalCode?.trim() || undefined,
         position: values.position?.trim(),
         registrationRelationship: values.registrationRelationship?.trim(),
-        authorityConfirmation: values.authorityConfirmation?.trim(),
+        authorityConfirmation: values.authorityConfirmation === "yes" ? "YES" : undefined,
       });
     }
     return payload;
@@ -296,6 +296,13 @@ export function RegisterForm() {
           </div>
         )}
 
+        {accountType === "organization" && step === 5 && (
+          <label style={{ display: "flex", gap: 9, alignItems: "flex-start", color: "#526779", fontSize: 12, lineHeight: 1.6 }}>
+            <input type="checkbox" checked={values.authorityConfirmation === "yes"} onChange={(event) => setValue("authorityConfirmation", event.target.checked ? "yes" : "")} />
+            <span>I confirm that I am authorized to submit this organization registration and that the information provided is accurate. *</span>
+          </label>
+        )}
+
         {step === securityStep && (
           <>
             <Field field={{ key: "password", label: "Password", type: showPassword ? "text" : "password", required: true, hint: "Use at least 12 characters." }} value={values.password ?? ""} onChange={(value) => setValue("password", value)} disabled={submitting} />
@@ -305,7 +312,7 @@ export function RegisterForm() {
             </label>
             <label style={{ display: "flex", gap: 9, alignItems: "flex-start", color: "#526779", fontSize: 12, lineHeight: 1.6 }}>
               <input type="checkbox" checked={values.acceptTerms === "yes"} onChange={(event) => setValue("acceptTerms", event.target.checked ? "yes" : "")} />
-              <span>I agree to the AssetPass terms of service and privacy policy. *</span>
+              <span>I agree to the AssetPass terms of service and privacy notice. This consent will be recorded with the date and policy version. *</span>
             </label>
           </>
         )}
