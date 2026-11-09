@@ -122,9 +122,7 @@ function Field({ field, value, onChange, otherValue, onOtherChange, disabled }: 
   disabled: boolean;
 }) {
   const isOther = field.allowOther && value === "Other";
-  const options = field.key === "registrationAuthority"
-    ? (REGISTRATION_AUTHORITY_OPTIONS["KE"] ?? ["Other"])
-    : field.options;
+  const options = field.options;
 
   return (
     <div className={styles.field}>
@@ -163,6 +161,7 @@ function Field({ field, value, onChange, otherValue, onOtherChange, disabled }: 
         <div className={styles.inputWrap}>
           <input
             aria-label={`Enter ${field.label.toLowerCase()}`}
+            data-step-field="true"
             value={otherValue ?? ""}
             onChange={(event) => onOtherChange?.(event.target.value)}
             placeholder={`Enter ${field.label.toLowerCase()}`}
@@ -285,6 +284,21 @@ export function RegisterForm() {
     return value === "Other" ? (values[`${key}Other`] ?? "").trim() : value === "__other__" ? (values[`${key}Other`] ?? "").trim() : value;
   }
 
+  function setManualCountryCode(code: string) {
+    setValues((previous) => ({
+      ...previous,
+      countryCode: code.toUpperCase(),
+      countryName: "",
+      county: "",
+      countyOther: "",
+      city: "",
+      cityOther: "",
+      registrationAuthority: "",
+      registrationAuthorityOther: "",
+    }));
+    setLocationError("");
+  }
+
   function selectCountry(code: string) {
     const country = countries.find((item) => item.iso2 === code);
     setValues((previous) => ({
@@ -306,7 +320,7 @@ export function RegisterForm() {
       ...previous,
       county: region,
       countyOther: "",
-      city: "",
+      city: region === "__other__" ? "__other__" : "",
       cityOther: "",
     }));
     setLocationError("");
@@ -463,7 +477,7 @@ export function RegisterForm() {
                       {countries.map((country) => <option key={country.iso2} value={country.iso2}>{country.name}</option>)}
                     </select>
                   ) : (
-                    <input id="countryCode" name="countryCode" data-step-field="true" required maxLength={2} minLength={2} value={values.countryCode ?? "KE"} onChange={(event) => setValue("countryCode", event.target.value.toUpperCase())} disabled={submitting} placeholder="ISO country code (e.g. KE)" />
+                    <input id="countryCode" name="countryCode" data-step-field="true" required maxLength={2} minLength={2} pattern="[A-Za-z]{2}" value={values.countryCode ?? "KE"} onChange={(event) => setManualCountryCode(event.target.value)} disabled={submitting} placeholder="ISO country code (e.g. KE)" />
                   )}
                 </div>
                 {countriesLoading && <p className={styles.formNote}>Loading country list…</p>}
