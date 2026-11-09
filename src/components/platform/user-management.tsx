@@ -80,7 +80,7 @@ export function UserManagement() {
   return (
     <PlatformAdminFrame
       title="User management"
-      description="Review new individual and organization-user registrations before granting AssetPass account access. Email verification and internal approval are both required; organization membership and organization approval remain separate."
+      description="Review new individual and organization-user registrations before granting AssetPass account access. Internal approval is required for account access. Email verification is encouraged but does not block sign-in at this stage; organization membership and organization approval remain separate."
     >
       {error && <div className="mb-5"><ErrorNotice message={error} /></div>}
 
@@ -194,7 +194,7 @@ export function UserManagement() {
           </div>
         )}
         <p className="mt-4 text-xs leading-5 text-slate-500">
-          Approving an account before its email is verified does not grant access. Sign-in becomes available only after both checks are complete.
+          Approving an account grants sign-in access even when email verification is still pending. Email verification remains available as an account-security step.
         </p>
       </DataPanel>
 
@@ -233,8 +233,8 @@ export function UserManagement() {
               />
               <p className="mt-2 text-xs text-slate-500">
                 {reviewTarget.emailVerifiedAt
-                  ? "Email verified. Approval will activate this account."
-                  : "Email not yet verified. Approval will be recorded, but sign-in remains blocked until email verification is complete."}
+                  ? "Approval will activate this account. Email verification is not required for sign-in at this stage."
+                  : "Email not yet verified. Approval will activate this account; email verification can be completed later."}
               </p>
               <div className="mt-6 flex justify-end gap-3">
                 <button type="button" onClick={closeReview} disabled={reviewing} className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
