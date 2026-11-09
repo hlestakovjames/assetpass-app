@@ -1,5 +1,10 @@
 import { OrganizationMembersManagement } from "@/components/organization/organization-members-management";
 
-export default function OrganizationMembersPage() {
-  return <OrganizationMembersManagement />;
+export default async function OrganizationMembersPage({
+  params,
+}: {
+  params: Promise<{ organizationId: string }>;
+}) {
+  const { organizationId } = await params;
+  return <OrganizationMembersManagement organizationId={organizationId} />;
 }
