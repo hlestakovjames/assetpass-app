@@ -216,6 +216,9 @@ export function RegisterForm() {
         website: values.website?.trim() || undefined,
         description: values.description?.trim() || undefined,
         postalCode: values.postalCode?.trim() || undefined,
+        position: values.position?.trim(),
+        registrationRelationship: values.registrationRelationship?.trim(),
+        authorityConfirmation: values.authorityConfirmation?.trim(),
       });
     }
     return payload;
