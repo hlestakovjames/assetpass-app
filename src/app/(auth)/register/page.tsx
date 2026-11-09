@@ -23,7 +23,7 @@ export default function RegisterPage() {
           <div className={styles.cardHeading}>
             <span className={styles.eyebrow}>GET STARTED</span>
             <h1>Create your account</h1>
-            <p>Set up your personal AssetPass identity. You can join or register an organization after creating your account.</p>
+            <p>Create an individual or organization account through a guided registration process. Individual accounts activate immediately; organizations are reviewed before their workspace is enabled.</p>
           </div>
           <RegisterForm />
           <div className={styles.securityNote}>
