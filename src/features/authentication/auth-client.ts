@@ -369,11 +369,12 @@ export async function registerAccount(input: RegistrationInput): Promise<{ messa
 }
 
 export async function verifyEmailAddress(token: string): Promise<{ message: string }> {
-  const response = await fetch(`${API_BASE_URL}/auth/verify-email?token=${encodeURIComponent(token)}`, {
-    method: "GET",
+  const response = await fetch(`${API_BASE_URL}/auth/verify-email`, {
+    method: "POST",
     credentials: "include",
     cache: "no-store",
-    headers: { Accept: "application/json" },
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({ token }),
   });
   const payload = await readPayload<{ message?: string }>(response);
   if (!response.ok) {
