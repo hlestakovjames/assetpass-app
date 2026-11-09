@@ -1,5 +1,4 @@
-import { PlatformConsole } from "@/components/platform/platform-console";
-
+import { PlatformOverview } from "@/components/platform/platform-overview";
 export default function PlatformOverviewPage() {
-  return <PlatformConsole />;
+  return <PlatformOverview />;
 }
