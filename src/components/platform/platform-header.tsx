@@ -19,7 +19,7 @@ type PlatformHeaderProps = {
 };
 
 function getInitials(fullName: string) {
-  const parts = fullName.trim().split(/\s+/).filter(Boolean);
+  const parts = fullName.trim().split(/\\s+/).filter(Boolean);
 
   if (parts.length === 0) return "U";
   if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
@@ -89,6 +89,11 @@ export function PlatformHeader({
       router.replace("/login");
       router.refresh();
     }
+  }
+
+  function requestLogout() {
+    setAccountMenuOpen(true);
+    setConfirmLogout(true);
   }
 
   const displayName = user?.fullName || "Authenticated user";
@@ -170,6 +175,17 @@ export function PlatformHeader({
         </div>
 
         <div className="topbar-divider" />
+
+        <button
+          className="topbar-signout"
+          type="button"
+          aria-label="Sign out of AssetPass"
+          disabled={signingOut}
+          onClick={requestLogout}
+        >
+          <span aria-hidden="true">↪</span>
+          <span>Sign out</span>
+        </button>
 
         <div className="profile-menu-wrap" ref={accountMenuRef}>
           <button
