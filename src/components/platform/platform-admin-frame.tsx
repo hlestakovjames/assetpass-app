@@ -85,7 +85,7 @@ export function PlatformAdminFrame({
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <button type="button" aria-label="Close navigation" onClick={() => setMobileMenuOpen(false)} className="absolute inset-0 bg-slate-950/50" />
-          <aside id="platform-mobile-navigation" aria-label="Platform navigation" className="absolute inset-y-0 left-0 flex w-[min( min(84vw, 320px), 320px)] flex-col bg-white shadow-2xl">
+          <aside id="platform-mobile-navigation" aria-label="Platform navigation" className="absolute inset-y-0 left-0 flex w-[min(84vw,320px)] flex-col bg-white shadow-2xl">
             <div className="flex h-16 items-center justify-between border-b border-slate-100 px-5">
               <Link href="/platform/overview" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold">Asset<span className="text-teal-600">Pass</span></Link>
               <button type="button" aria-label="Close navigation" onClick={() => setMobileMenuOpen(false)} className="grid size-10 place-items-center rounded-lg text-2xl text-slate-500 hover:bg-slate-100">×</button>
