@@ -1,0 +1,489 @@
+.page {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  padding: 0 clamp(20px, 7vw, 108px);
+  background: #f3f6f9;
+  color: #172b3c;
+}
+
+.header {
+  display: flex;
+  min-height: 86px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid #e1e8ee;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #123047;
+  text-decoration: none;
+}
+
+.brandMark {
+  display: grid;
+  width: 43px;
+  height: 43px;
+  place-items: center;
+  border-radius: 11px;
+  background: #123047;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 850;
+  letter-spacing: -0.8px;
+  box-shadow: 0 4px 12px rgb(18 48 71 / 15%);
+}
+
+.brandName {
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -1.1px;
+}
+
+.brandName span {
+  color: #0f9f91;
+}
+
+.headerLabel {
+  color: #748596;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 1.6px;
+}
+
+.main {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 55px 0 65px;
+}
+
+.card {
+  width: 100%;
+  max-width: 470px;
+  padding: clamp(30px, 5vw, 46px);
+  border: 1px solid #e1e8ee;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow:
+    0 18px 50px rgb(19 43 61 / 7%),
+    0 2px 7px rgb(19 43 61 / 3%);
+}
+
+.cardHeading {
+  margin-bottom: 32px;
+}
+
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: #0f9488;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.7px;
+}
+
+.cardHeading h1 {
+  margin: 0 0 11px;
+  color: #123047;
+  font-size: clamp(29px, 4vw, 35px);
+  font-weight: 780;
+  letter-spacing: -1.3px;
+  line-height: 1.2;
+}
+
+.cardHeading p {
+  margin: 0;
+  color: #718293;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+/* Login form */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.field label {
+  color: #253b4d;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.labelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.labelRow a {
+  color: #0c8e83;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.labelRow a:hover {
+  text-decoration: underline;
+}
+
+.inputWrap {
+  display: flex;
+  width: 100%;
+  min-height: 56px;
+  align-items: center;
+  gap: 15px;
+  padding: 0 17px;
+  border: 1px solid #d5dfe7;
+  border-radius: 7px;
+  background: #ffffff;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.inputWrap:hover {
+  border-color: #aabcc9;
+}
+
+.inputWrap:focus-within {
+  border-color: #0f9f91;
+  box-shadow: 0 0 0 3px rgb(45 212 191 / 13%);
+}
+
+.inputWrap svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  fill: none;
+  stroke: #8293a1;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.inputWrap input {
+  width: 100%;
+  min-width: 0;
+  height: 54px;
+  padding: 0 0 0 3px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #123047;
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.inputWrap input::placeholder {
+  color: #9aa8b4;
+  opacity: 1;
+}
+
+.inputWrap input:focus-visible {
+  outline: none;
+}
+
+.passwordToggle {
+  flex: 0 0 auto;
+  margin-left: 5px;
+  padding: 7px 0 7px 10px;
+  border: 0;
+  background: transparent;
+  color: #0f8f84;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.passwordToggle:hover {
+  color: #096d65;
+  text-decoration: underline;
+}
+
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: -5px;
+  padding: 12px 13px;
+  border: 1px solid #efc7c3;
+  border-radius: 7px;
+  background: #fff3f1;
+  color: #a83f39;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.error span {
+  display: grid;
+  width: 17px;
+  height: 17px;
+  flex: 0 0 17px;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.submit {
+  display: flex;
+  width: 100%;
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 3px;
+  padding: 0 18px;
+  border: 1px solid #123047;
+  border-radius: 7px;
+  background: #123047;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  box-shadow: 0 4px 10px rgb(18 48 71 / 12%);
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+.submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: #19445d;
+  background: #19445d;
+}
+
+.submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submit:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgb(255 255 255 / 35%);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.formNote {
+  margin: -5px 0 0;
+  color: #8795a2;
+  font-size: 10px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* Security and supporting links */
+
+.securityNote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 27px;
+  padding-top: 20px;
+  border-top: 1px solid #edf1f4;
+  color: #82919e;
+  font-size: 10px;
+}
+
+.securityIcon {
+  display: grid;
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e7f7f3;
+  color: #0f9f91;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.marketplace {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 26px;
+  color: #788896;
+  font-size: 12px;
+  text-align: center;
+}
+
+.marketplace a {
+  color: #0f8f84;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.marketplace a:hover {
+  text-decoration: underline;
+}
+
+.footer {
+  display: flex;
+  min-height: 65px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid #e1e8ee;
+  color: #8998a5;
+  font-size: 10px;
+}
+
+/* Mobile layout */
+
+@media (max-width: 600px) {
+  .page {
+    padding: 0 19px;
+  }
+
+  .header {
+    min-height: 72px;
+  }
+
+  .headerLabel {
+    display: none;
+  }
+
+  .brandMark {
+    width: 38px;
+    height: 38px;
+  }
+
+  .brandName {
+    font-size: 22px;
+  }
+
+  .main {
+    justify-content: center;
+    padding: 38px 0 45px;
+  }
+
+  .card {
+    padding: 29px 22px;
+    border-radius: 10px;
+  }
+
+  .cardHeading {
+    margin-bottom: 27px;
+  }
+
+  .cardHeading h1 {
+    font-size: 30px;
+  }
+
+  .footer {
+    justify-content: center;
+    padding: 15px 0;
+    text-align: center;
+  }
+}
+
+@media (max-width: 360px) {
+  .page {
+    padding: 0 13px;
+  }
+
+  .card {
+    padding: 25px 17px;
+  }
+
+  .labelRow {
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page *,
+  .page *::before,
+  .page *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark AssetPass environment surrounding the white login card */
+.page {
+  background:
+    radial-gradient(ellipse at 50% 42%, rgb(45 212 191 / 10%), transparent 42%),
+    radial-gradient(ellipse at 8% 5%, rgb(36 91 119 / 24%), transparent 38%),
+    linear-gradient(135deg, #081725 0%, #102b40 52%, #0b1d2c 100%);
+}
+
+.header {
+  border-bottom-color: rgb(255 255 255 / 11%);
+}
+
+.brand {
+  color: #f3f8fb;
+}
+
+.brandMark {
+  border: 1px solid rgb(45 212 191 / 35%);
+  background: linear-gradient(145deg, #1a465c, #102b40);
+  color: #55d8c5;
+  box-shadow: 0 5px 18px rgb(0 0 0 / 20%);
+}
+
+.brandName span {
+  color: #55d8c5;
+}
+
+.headerLabel {
+  color: #9bb2c1;
+}
+
+.marketplace {
+  color: #a8bac7;
+}
+
+.marketplace a {
+  color: #55d8c5;
+}
+
+.footer {
+  border-top-color: rgb(255 255 255 / 11%);
+  color: #91a9b9;
+}
+
+
+/* Keep browser-autofilled credentials consistent with the login design */
+.inputWrap input:-webkit-autofill,
+.inputWrap input:-webkit-autofill:hover,
+.inputWrap input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #123047;
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
+  caret-color: #123047;
+}

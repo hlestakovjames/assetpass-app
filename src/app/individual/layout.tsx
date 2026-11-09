@@ -1,6 +1,10 @@
 import type { ReactNode } from "react";
+import { AuthGuard } from "@/features/authentication/auth-guard";
 
-/** Individual workspace layout. Authentication and account-scoped authorization will be integrated in the security phase. */
-export default function IndividualLayout({ children }: { children: ReactNode }) {
-  return <>{children}</>;
+export default function IndividualLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  return <AuthGuard>{children}</AuthGuard>;
 }

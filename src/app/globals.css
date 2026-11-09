@@ -2993,3 +2993,155 @@ html[data-theme="dark"] .form-field-invalid textarea {
     min-width: 0;
   }
 }
+
+/* Authenticated account menu */
+.profile-menu-wrap {
+  position: relative;
+}
+
+.profile-menu {
+  position: absolute;
+  top: calc(100% + 13px);
+  right: 0;
+  z-index: 90;
+  width: min(300px, calc(100vw - 28px));
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--surface);
+  box-shadow: 0 16px 42px rgb(19 48 71 / 16%);
+}
+
+.profile-menu-user {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+}
+
+.profile-menu-user > strong {
+  overflow-wrap: anywhere;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.profile-menu-email {
+  overflow-wrap: anywhere;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.profile-menu-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 10px;
+  text-transform: capitalize;
+}
+
+.profile-status-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.profile-menu-divider {
+  height: 1px;
+  margin: 3px 4px 7px;
+  background: var(--border);
+}
+
+.profile-menu-signout {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 12px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--red);
+  font-size: 12px;
+  font-weight: 650;
+  text-align: left;
+}
+
+.profile-menu-signout:hover {
+  background: var(--red-bg);
+}
+
+.profile-menu-signout > span {
+  font-size: 17px;
+}
+
+.profile-menu-confirm {
+  padding: 10px 12px 8px;
+}
+
+.profile-menu-confirm > strong {
+  color: var(--text);
+  font-size: 12px;
+}
+
+.profile-menu-confirm > p {
+  margin: 7px 0 13px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.profile-menu-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.profile-menu-actions button {
+  min-height: 32px;
+  padding: 0 11px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.profile-menu-cancel {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.profile-menu-confirm-button {
+  border-color: var(--red) !important;
+  background: var(--red);
+  color: white;
+}
+
+.profile-menu-actions button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+html[data-theme="dark"] .profile-menu {
+  border-color: var(--border);
+  background: var(--surface);
+  box-shadow: 0 16px 42px rgb(0 0 0 / 35%);
+}
+
+html[data-theme="dark"] .profile-menu-user > strong,
+html[data-theme="dark"] .profile-menu-confirm > strong {
+  color: var(--text-strong);
+}
+
+html[data-theme="dark"] .profile-menu-signout:hover {
+  background: rgb(189 75 75 / 14%);
+}
+
+html[data-theme="dark"] .profile-menu-cancel {
+  background: var(--surface);
+  color: var(--text-strong);
+}

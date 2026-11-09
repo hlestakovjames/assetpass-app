@@ -1,5 +1,6 @@
 import { Suspense, type ReactNode } from "react";
 import { OrganizationDemoProvider } from "@/features/organizations/organization-demo-provider";
+import { AuthGuard } from "@/features/authentication/auth-guard";
 
 function PlatformLoadingState() {
   return (
@@ -13,10 +14,18 @@ function PlatformLoadingState() {
   );
 }
 
-export default function PlatformLayout({ children }: { children: ReactNode }) {
+export default function PlatformLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
-    <OrganizationDemoProvider>
-      <Suspense fallback={<PlatformLoadingState />}>{children}</Suspense>
-    </OrganizationDemoProvider>
+    <AuthGuard>
+      <OrganizationDemoProvider>
+        <Suspense fallback={<PlatformLoadingState />}>
+          {children}
+        </Suspense>
+      </OrganizationDemoProvider>
+    </AuthGuard>
   );
 }
