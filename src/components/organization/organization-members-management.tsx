@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { organizationApi, type OrganizationMember, type OrganizationWorkspace } from "@/features/organizations/organization-api";
+import { useAuth } from "@/features/authentication/auth-provider";
 
 const roleOptions = [
   { key: "organization_admin", label: "Organization Administrator" },
@@ -14,6 +15,7 @@ const roleOptions = [
 export function OrganizationMembersManagement() {
   const params = useParams<{ organizationId: string }>();
   const organizationId = params.organizationId;
+  const { user } = useAuth();
   const [workspace, setWorkspace] = useState<OrganizationWorkspace | null>(null);
   const [members, setMembers] = useState<OrganizationMember[]>([]);
   const [email, setEmail] = useState("");
@@ -74,14 +76,14 @@ export function OrganizationMembersManagement() {
     } finally { setSaving(false); }
   }
 
-  async function changeStatus(member: OrganizationMember, status: "suspended" | "removed") {
-    const label = status === "suspended" ? "suspend" : "remove";
+  async function changeStatus(member: OrganizationMember, status: "active" | "suspended" | "removed") {
+    const label = status === "active" ? "reactivate" : status === "suspended" ? "suspend" : "remove";
     if (!window.confirm(`Are you sure you want to ${label} ${member.user?.fullName ?? "this member"}?`)) return;
     setSaving(true); setError(""); setNotice("");
     try {
       await organizationApi.changeMemberStatus(organizationId, member.id, status);
       await reload();
-      setNotice(status === "suspended" ? "Membership suspended." : "Membership removed.");
+      setNotice(status === "active" ? "Membership reactivated." : status === "suspended" ? "Membership suspended." : "Membership removed.");
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "Unable to update membership status.");
     } finally { setSaving(false); }
@@ -119,7 +121,9 @@ export function OrganizationMembersManagement() {
                     <div className="mt-3 flex flex-wrap items-center justify-between gap-3"><div className="flex flex-wrap gap-1.5">{member.roles.map((role) => <span key={role.key} className="rounded-full bg-teal-50 px-2.5 py-1 text-xs font-medium text-teal-800">{role.name}</span>)}</div>
                       {canManageRoles && member.status === "active" && <select aria-label={`Role for ${member.user?.fullName ?? "member"}`} disabled={saving} value={member.roles[0]?.key ?? "organization_member"} onChange={(event) => void changeRole(member, event.target.value)} className="rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-xs">{roleOptions.map((role) => <option key={role.key} value={role.key}>{role.label}</option>)}</select>}
                     </div>
+                    {member.status === "pending" && member.user?.id === user?.id && <div className="mt-3 flex justify-end"><button disabled={saving} onClick={async () => { setSaving(true); setError(""); setNotice(""); try { await organizationApi.acceptInvitation(organizationId, member.id); await reload(); setNotice("You have joined this organization."); } catch (reason) { setError(reason instanceof Error ? reason.message : "Unable to accept this invitation."); } finally { setSaving(false); } }} className="rounded-lg bg-teal-700 px-3 py-2 text-xs font-semibold text-white hover:bg-teal-800 disabled:opacity-50">Accept invitation</button></div>}
                     {canManage && member.status === "active" && <div className="mt-3 flex justify-end"><button disabled={saving} onClick={() => void changeStatus(member, "suspended")} className="rounded-lg border border-amber-200 px-3 py-2 text-xs font-semibold text-amber-800 hover:bg-amber-50 disabled:opacity-50">Suspend member</button><button disabled={saving} onClick={() => void changeStatus(member, "removed")} className="ml-2 rounded-lg border border-rose-200 px-3 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-50 disabled:opacity-50">Remove</button></div>}
+                    {canManage && member.status === "suspended" && <div className="mt-3 flex justify-end"><button disabled={saving} onClick={() => void changeStatus(member, "active")} className="rounded-lg border border-emerald-200 px-3 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-50 disabled:opacity-50">Reactivate member</button></div>}
                   </article>)}
                   {members.length === 0 && <p className="rounded-xl bg-slate-50 p-6 text-sm text-slate-500">No membership records were found.</p>}
                 </div>
