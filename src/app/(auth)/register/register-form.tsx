@@ -234,7 +234,6 @@ export function RegisterForm() {
   useEffect(() => {
     if (!values.countryName) return;
     const controller = new AbortController();
-    setRegionsLoading(true);
     getRegistrationRegions(values.countryName, controller.signal)
       .then((items) => { setRegions(items); setLocationError(""); })
       .catch((cause: unknown) => {
@@ -251,7 +250,6 @@ export function RegisterForm() {
   useEffect(() => {
     if (!values.countryName || !values.county || values.county === "__other__") return;
     const controller = new AbortController();
-    setCitiesLoading(true);
     getRegistrationCities(values.countryName, values.county, controller.signal)
       .then((items) => { setCities(items); setLocationError(""); })
       .catch((cause: unknown) => {
@@ -288,6 +286,8 @@ export function RegisterForm() {
     }));
     setRegions([]);
     setCities([]);
+    setRegionsLoading(false);
+    setCitiesLoading(false);
     setLocationError("");
   }
 
@@ -306,6 +306,8 @@ export function RegisterForm() {
     }));
     setRegions([]);
     setCities([]);
+    setRegionsLoading(true);
+    setCitiesLoading(false);
     setLocationError("");
   }
 
@@ -318,6 +320,7 @@ export function RegisterForm() {
       cityOther: "",
     }));
     setCities([]);
+    setCitiesLoading(region !== "__other__");
     setLocationError("");
   }
 
