@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { registerAccount, resendEmailVerification } from "@/features/authentication/auth-client";
+import { registerAccount } from "@/features/authentication/auth-client";
 import styles from "../login/login.module.css";
 
 export function RegisterForm() {
@@ -11,16 +11,13 @@ export function RegisterForm() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [resending, setResending] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
-  const [resendMessage, setResendMessage] = useState("");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
     setSuccess("");
-    setResendMessage("");
     if (password.length < 12) {
       setError("Use a password containing at least 12 characters.");
       return;
@@ -40,20 +37,6 @@ export function RegisterForm() {
     }
   }
 
-  async function handleResend() {
-    setResending(true);
-    setError("");
-    setResendMessage("");
-    try {
-      const result = await resendEmailVerification(email.trim().toLowerCase());
-      setResendMessage(result.message);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to request another email.");
-    } finally {
-      setResending(false);
-    }
-  }
-
   return (
     <div>
       {success ? (
@@ -62,11 +45,7 @@ export function RegisterForm() {
             <span className={styles.securityIcon}>✓</span>
             <span>{success}</span>
           </div>
-          <p className={styles.formNote}>Check your inbox and spam folder. The verification link expires after 24 hours.</p>
-          <button className={styles.submit} type="button" onClick={handleResend} disabled={resending}>
-            {resending ? "Sending..." : "Resend verification email"}
-          </button>
-          {resendMessage && <p className={styles.formNote} role="status">{resendMessage}</p>}
+          <p className={styles.formNote}>Your account is active immediately. You can now sign in with the email address and password you just registered.</p>
           <Link href="/login" style={{ color: "#0f8f84", textAlign: "center", fontSize: 12, fontWeight: 700 }}>Return to sign in</Link>
         </div>
       ) : (
@@ -99,7 +78,7 @@ export function RegisterForm() {
           <button className={styles.submit} type="submit" disabled={submitting} aria-busy={submitting}>
             {submitting ? "Creating account..." : <>Create AssetPass account <span aria-hidden="true">→</span></>}
           </button>
-          <p className={styles.formNote}>By creating an account, you agree to use accurate identity and contact information.</p>
+          <p className={styles.formNote}>Your account is activated immediately after registration. By creating an account, you agree to use accurate identity and contact information.</p>
         </form>
       )}
     </div>
