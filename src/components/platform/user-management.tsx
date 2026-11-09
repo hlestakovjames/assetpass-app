@@ -80,7 +80,7 @@ export function UserManagement() {
   return (
     <PlatformAdminFrame
       title="User management"
-      description="Review new individual and organization-user registrations before granting AssetPass account access. Internal approval is required for account access. Email verification is encouraged but does not block sign-in at this stage; organization membership and organization approval remain separate."
+      description="Manage the global AssetPass account directory. New self-service registrations are automatically approved, internally verified and activated; administrators can still restrict accounts. Organization membership and organization approval remain separate."
     >
       {error && <div className="mb-5"><ErrorNotice message={error} /></div>}
 
@@ -90,11 +90,11 @@ export function UserManagement() {
           <p className="mt-2 text-3xl font-semibold">{users.length}</p>
         </DataPanel>
         <DataPanel>
-          <p className="text-sm text-slate-500">Awaiting internal approval</p>
+          <p className="text-sm text-slate-500">Legacy accounts awaiting review</p>
           <p className="mt-2 text-3xl font-semibold">{pendingCount}</p>
         </DataPanel>
         <DataPanel>
-          <p className="text-sm text-slate-500">Email verification pending</p>
+          <p className="text-sm text-slate-500">Email verification not recorded</p>
           <p className="mt-2 text-3xl font-semibold">{unverifiedCount}</p>
         </DataPanel>
         <DataPanel>
@@ -108,7 +108,7 @@ export function UserManagement() {
           <div>
             <h2 className="text-lg font-semibold">Global user directory</h2>
             <p className="mt-1 text-sm text-slate-500">
-              Existing accounts remain approved. Password hashes and authentication secrets are never returned.
+              New registrations are automatically activated. Legacy review states remain visible for administrative follow-up; password hashes and authentication secrets are never returned.
             </p>
           </div>
           <input
@@ -194,7 +194,7 @@ export function UserManagement() {
           </div>
         )}
         <p className="mt-4 text-xs leading-5 text-slate-500">
-          Approving an account grants sign-in access even when email verification is still pending. Email verification remains available as an account-security step.
+          New accounts can sign in immediately after registration. Administrators retain account restriction controls; legacy pending-review records can still be resolved here.
         </p>
       </DataPanel>
 
