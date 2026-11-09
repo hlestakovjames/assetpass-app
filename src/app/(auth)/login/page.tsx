@@ -42,7 +42,9 @@ export default function LoginPage() {
 
         <div className={styles.marketplace}>
           <span>New to AssetPass?</span>
-          <Link href="/marketplace">Explore the public marketplace <span aria-hidden="true">→</span></Link>
+          <Link href="/register">Create an account <span aria-hidden="true">→</span></Link>
+          <span aria-hidden="true">·</span>
+          <Link href="/marketplace">Explore marketplace</Link>
         </div>
       </section>
 

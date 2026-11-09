@@ -346,3 +346,53 @@ export async function logoutAll(): Promise<void> {
     clearLocalSession();
   }
 }
+
+
+export type RegistrationInput = {
+  fullName: string;
+  email: string;
+  password: string;
+};
+
+export async function registerAccount(input: RegistrationInput): Promise<{ message: string }> {
+  const response = await fetch(`${API_BASE_URL}/auth/register`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify(input),
+  });
+  const payload = await readPayload<{ message?: string }>(response);
+  if (!response.ok) {
+    throw new Error(getErrorMessage(payload, "Unable to create your account. Please try again."));
+  }
+  return { message: payload?.message ?? "If the address can be registered, a verification email will be sent shortly." };
+}
+
+export async function verifyEmailAddress(token: string): Promise<{ message: string }> {
+  const response = await fetch(`${API_BASE_URL}/auth/verify-email`, {
+    method: "POST",
+    credentials: "include",
+    cache: "no-store",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({ token }),
+  });
+  const payload = await readPayload<{ message?: string }>(response);
+  if (!response.ok) {
+    throw new Error(getErrorMessage(payload, "This verification link is invalid or has expired."));
+  }
+  return { message: payload?.message ?? "Your email address has been verified. You can now sign in." };
+}
+
+export async function resendEmailVerification(email: string): Promise<{ message: string }> {
+  const response = await fetch(`${API_BASE_URL}/auth/resend-verification`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  const payload = await readPayload<{ message?: string }>(response);
+  if (!response.ok) {
+    throw new Error(getErrorMessage(payload, "Unable to request another verification email."));
+  }
+  return { message: payload?.message ?? "If the address can be registered, a verification email will be sent shortly." };
+}
