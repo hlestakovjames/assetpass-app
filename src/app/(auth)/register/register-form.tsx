@@ -166,8 +166,8 @@ export function RegisterForm() {
         setError("The passwords do not match.");
         return false;
       }
-      if (!values.acceptTerms) {
-        setError("Please accept the terms and privacy policy to continue.");
+      if (!values.acceptTerms || !values.privacyNoticeAcknowledged) {
+        setError("Please accept the terms of service and acknowledge the privacy notice to continue.");
         return false;
       }
     }
@@ -199,6 +199,7 @@ export function RegisterForm() {
       occupation: values.occupation?.trim() || undefined,
       preferredContactMethod: values.preferredContactMethod === "phone" ? "phone" : "email",
       termsAccepted: values.acceptTerms === "yes",
+      privacyNoticeAcknowledged: values.privacyNoticeAcknowledged === "yes",
     };
     if (accountType === "organization") {
       Object.assign(payload, {
@@ -312,7 +313,11 @@ export function RegisterForm() {
             </label>
             <label style={{ display: "flex", gap: 9, alignItems: "flex-start", color: "#526779", fontSize: 12, lineHeight: 1.6 }}>
               <input type="checkbox" checked={values.acceptTerms === "yes"} onChange={(event) => setValue("acceptTerms", event.target.checked ? "yes" : "")} />
-              <span>I agree to the AssetPass terms of service and privacy notice. This consent will be recorded with the date and policy version. *</span>
+              <span>I agree to the AssetPass terms of service. *</span>
+            </label>
+            <label style={{ display: "flex", gap: 9, alignItems: "flex-start", color: "#526779", fontSize: 12, lineHeight: 1.6 }}>
+              <input type="checkbox" checked={values.privacyNoticeAcknowledged === "yes"} onChange={(event) => setValue("privacyNoticeAcknowledged", event.target.checked ? "yes" : "")} />
+              <span>I acknowledge that I have read the AssetPass privacy notice. *</span>
             </label>
           </>
         )}
