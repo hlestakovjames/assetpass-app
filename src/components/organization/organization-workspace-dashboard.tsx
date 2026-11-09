@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { organizationApi, type OrganizationWorkspace } from "@/features/organizations/organization-api";
+import { MobileWorkspaceNavigation } from "@/components/shared/mobile-workspace-navigation";
 
 export function OrganizationWorkspaceDashboard({ organizationId }: { organizationId: string }) {
   const [workspace, setWorkspace] = useState<OrganizationWorkspace | null>(null);
@@ -18,7 +19,7 @@ export function OrganizationWorkspaceDashboard({ organizationId }: { organizatio
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="border-b border-slate-200 bg-white"><div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5"><Link href="/organization/overview" className="text-lg font-bold">Asset<span className="text-teal-600">Pass</span></Link><Link href="/organization/overview" className="text-sm font-medium text-slate-600 hover:text-slate-950">All organizations</Link></div></header>
+      <header className="border-b border-slate-200 bg-white"><div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-5 sm:py-5"><div className="flex items-center gap-3"><MobileWorkspaceNavigation workspaceLabel="Organization workspace" links={[{ href: "/organization/overview", label: "All organizations" }]} /><Link href="/organization/overview" className="text-lg font-bold">Asset<span className="text-teal-600">Pass</span></Link></div><Link href="/organization/overview" className="hidden text-sm font-medium text-slate-600 hover:text-slate-950 sm:inline">All organizations</Link></div></header>
       <div className="mx-auto max-w-6xl px-5 py-10">
         {loading ? <p className="rounded-2xl border border-slate-200 bg-white p-8 text-sm text-slate-500">Verifying organization workspace access…</p> : error ? <div role="alert" className="rounded-2xl border border-rose-200 bg-rose-50 p-6"><h1 className="font-semibold text-rose-900">Workspace unavailable</h1><p className="mt-2 text-sm text-rose-800">{error}</p><Link href="/organization/overview" className="mt-4 inline-block text-sm font-semibold underline">Return to your organizations</Link></div> : workspace && (
           <>
