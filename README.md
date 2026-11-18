@@ -24,13 +24,13 @@ The public marketing website is maintained separately in [assetpass-frontend](ht
 | Route group | Responsibility | Current status |
 |---|---|---|
 | `/(auth)` | Login, registration and email verification | UI and API client foundation |
-| `/account` | Account profile, security and notifications | Placeholder areas |
+| `/account` | Account home, available contexts and Individual Workspace activation | Initial account/context landing and activation controls |
 | `/individual` | Individual workspace and asset experience | Early route/component foundation |
 | `/organization` | Organisation workspace, members and assets | Some API-backed and some demo/placeholder areas |
 | `/platform` | Platform Administration Workspace | Existing console foundation with placeholder module routes |
 | `/marketplace` | Marketplace participant experience | Route/feature placeholder; must use shared Marketplace domain |
 
-The root route currently redirects to `/login`. Several route folders contain only `.gitkeep`; these are planned locations, not implemented features.
+The root route currently redirects to `/login`. After authentication, accounts with no active workspace are directed to `/account`. Several route folders contain only `.gitkeep`; these are planned locations, not implemented features.
 
 ## Current frontend structure
 
@@ -87,6 +87,8 @@ npm run start
 
 - One persistent person identity/account may access multiple contexts; do not create duplicate accounts for individual, organisation or platform capacities.
 - An authenticated account may exist without an Individual Workspace.
+- `/account` is the safe landing for authenticated accounts with no active default workspace.
+- Individual Workspace routes are guarded by server-resolved activation state; client guards improve navigation but do not replace backend authorization.
 - Individual and organisation contexts can be established independently and linked later through verified identity/authority workflows.
 - Context switching must revalidate access with the backend.
 - Platform role, organisation role, membership, office/position and permission are distinct.
@@ -106,8 +108,7 @@ The repository includes a GitHub Actions workflow for lint and production-build 
 
 ## Next alignment work
 
-1. Account landing and context selection for accounts without a workspace.
-2. Explicit Individual Workspace activation and deactivation.
+1. Validate account landing, context selection and Individual Workspace activation/deactivation against the backend migration and CI.
 3. Organisation-first onboarding and representative/authority verification.
 4. Global Administrator role and permission alignment.
 5. Replace demo-backed organisation/platform behavior incrementally as matching backend APIs become available.
