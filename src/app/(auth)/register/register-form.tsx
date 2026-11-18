@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { registerAccount, type RegistrationInput } from "@/features/authentication/auth-client";
+import { OrganizationOnboardingForm } from "./organization-onboarding-form";
 import {
   CONTACT_POSITION_OPTIONS,
   INDUSTRY_SECTOR_OPTIONS,
@@ -18,6 +19,10 @@ import {
 import styles from "../login/login.module.css";
 
 type AccountType = "individual" | "organization";
+
+function isOrganizationAccount(value: AccountType | null): boolean {
+  return value === "organization";
+}
 type FormValues = Record<string, string>;
 type RegistrationField = {
   key: string;
@@ -422,13 +427,17 @@ export function RegisterForm() {
     }
   }
 
+  if (isOrganizationAccount(accountType)) {
+    return <OrganizationOnboardingForm onBack={() => { setAccountType(null); setStep(0); setError(""); }} />;
+  }
+
   if (success) {
     return (
       <div className={styles.form} role="status" aria-live="polite">
         <div className={styles.securityNote} style={{ marginTop: 0, padding: 14, border: "1px solid #b9e5d8", borderRadius: 8, background: "#effaf6", color: "#176b58" }}>
           <span className={styles.securityIcon}>✓</span><span>{success}</span>
         </div>
-        <p className={styles.formNote}>Your user account is active immediately. Organization workspaces become available after the organization is reviewed and approved.</p>
+        <p className={styles.formNote}>Your account is active immediately. An Individual Workspace is optional and can be activated after sign-in. Organization workspaces become available after the organization is reviewed and approved.</p>
         <Link href="/login" style={{ color: "#0f8f84", textAlign: "center", fontSize: 12, fontWeight: 700 }}>Continue to sign in</Link>
       </div>
     );
@@ -437,10 +446,10 @@ export function RegisterForm() {
   if (!accountType) {
     return (
       <div className={styles.form}>
-        <p style={{ color: "#526779", fontSize: 13, margin: 0 }}>Choose the type of account you want to create.</p>
+        <p style={{ color: "#526779", fontSize: 13, margin: 0 }}>Choose how you want to get started.</p>
         <button type="button" className={styles.submit} onClick={() => { setAccountType("individual"); setStep(0); }}>Individual account <span aria-hidden="true">→</span></button>
-        <button type="button" className={styles.submit} onClick={() => { setAccountType("organization"); setStep(0); }}>Organization account <span aria-hidden="true">→</span></button>
-        <p className={styles.formNote}>You can create or join an organization later using the same individual account.</p>
+        <button type="button" className={styles.submit} onClick={() => { setAccountType("organization"); setStep(0); }}>Organisation application <span aria-hidden="true">→</span></button>
+        <p className={styles.formNote}>An organisation can apply independently. You can create or use a personal account later if you need to claim an approved organisation.</p>
       </div>
     );
   }

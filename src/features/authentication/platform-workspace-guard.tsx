@@ -15,7 +15,7 @@ export function PlatformWorkspaceGuard({ children }: { children: ReactNode }) {
       return;
     }
     if (status === "authenticated" && !hasPlatformRole) {
-      router.replace(user?.defaultWorkspace?.href ?? "/individual/overview");
+      router.replace(user?.defaultWorkspace?.href ?? "/account");
     }
   }, [status, hasPlatformRole, user?.defaultWorkspace?.href, router]);
 
