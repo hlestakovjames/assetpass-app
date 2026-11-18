@@ -9,7 +9,6 @@ import {
   LEGAL_STRUCTURE_OPTIONS,
   ORGANIZATION_RELATIONSHIP_OPTIONS,
   ORGANIZATION_TYPE_OPTIONS,
-  REGISTRATION_AUTHORITY_OPTIONS,
 } from "@/features/authentication/registration-reference-data";
 import styles from "../login/login.module.css";
 
@@ -27,7 +26,7 @@ const fields: Array<{ key: keyof OrganizationOnboardingInput; label: string; typ
   { key: "industrySector", label: "Industry / sector", options: INDUSTRY_SECTOR_OPTIONS },
   { key: "legalStructure", label: "Legal structure", options: LEGAL_STRUCTURE_OPTIONS },
   { key: "registrationNumber", label: "Registration number" },
-  { key: "registrationAuthority", label: "Registration authority", options: REGISTRATION_AUTHORITY_OPTIONS.KE },
+  { key: "registrationAuthority", label: "Registration authority", hint: "Enter the authority that registered the organisation in the selected country, where applicable." },
   { key: "registrationDate", label: "Date of registration", type: "date" },
   { key: "contactEmail", label: "Official organisation email", type: "email", required: true },
   { key: "contactPhone", label: "Official organisation phone", type: "tel", required: true },
