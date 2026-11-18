@@ -23,12 +23,12 @@ export default function RegisterPage() {
           <div className={styles.cardHeading}>
             <span className={styles.eyebrow}>GET STARTED</span>
             <h1>Create your account</h1>
-            <p>Create an individual or organization account through a guided registration process. Your account activates immediately. Individual Workspace is optional; organizations are reviewed before their workspace is enabled.</p>
+            <p>Create a personal AssetPass account or submit an organisation application. Organisation applications do not require a personal account and are reviewed separately.</p>
           </div>
           <RegisterForm />
           <div className={styles.securityNote}>
             <span className={styles.securityIcon}>✓</span>
-            <span>Your account is activated immediately after registration</span>
+            <span>Personal accounts activate immediately; organisation applications follow a separate review process</span>
           </div>
         </div>
         <div className={styles.marketplace}>
