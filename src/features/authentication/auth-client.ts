@@ -45,7 +45,7 @@ export type AuthenticatedUser = {
   platformPermissions: string[];
   organizations: IdentityOrganization[];
   availableWorkspaces: AvailableWorkspace[];
-  defaultWorkspace: AvailableWorkspace;
+  defaultWorkspace: AvailableWorkspace | null;
 };
 
 export type LoginResponse = {
@@ -467,4 +467,48 @@ export async function resendEmailVerification(email: string): Promise<{ message:
     throw new Error(getErrorMessage(payload, "Unable to request another verification email."));
   }
   return { message: payload?.message ?? "If the address can be registered, a verification email will be sent shortly." };
+}
+
+
+export async function refreshAuthenticatedIdentity(): Promise<AuthenticatedUser> {
+  const response = await apiFetch('/auth/me', {
+    method: 'GET',
+    cache: 'no-store',
+  });
+  const user = await readPayload<AuthenticatedUser>(response);
+
+  if (!response.ok || !user || typeof user.id !== 'string' || !accessToken) {
+    throw new Error(
+      getErrorMessage(user, 'Unable to refresh your AssetPass account context.'),
+    );
+  }
+
+  setAuthenticatedState(accessToken, user);
+  return user;
+}
+
+export async function activateIndividualWorkspace(): Promise<AuthenticatedUser> {
+  const response = await apiFetch('/workspaces/individual/activate', {
+    method: 'POST',
+  });
+  const payload = await readPayload<{ message?: unknown }>(response);
+
+  if (!response.ok) {
+    throw new Error(getErrorMessage(payload, 'Unable to activate your Individual Workspace.'));
+  }
+
+  return refreshAuthenticatedIdentity();
+}
+
+export async function deactivateIndividualWorkspace(): Promise<AuthenticatedUser> {
+  const response = await apiFetch('/workspaces/individual/deactivate', {
+    method: 'POST',
+  });
+  const payload = await readPayload<{ message?: unknown }>(response);
+
+  if (!response.ok) {
+    throw new Error(getErrorMessage(payload, 'Unable to deactivate your Individual Workspace.'));
+  }
+
+  return refreshAuthenticatedIdentity();
 }
