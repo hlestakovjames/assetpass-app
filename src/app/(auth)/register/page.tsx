@@ -22,7 +22,7 @@ export default function RegisterPage() {
         <div className={styles.card}>
           <div className={styles.cardHeading}>
             <span className={styles.eyebrow}>GET STARTED</span>
-            <h1>Create your account</h1>
+            <h1>Get started with AssetPass</h1>
             <p>Create a personal AssetPass account or submit an organisation application. Organisation applications do not require a personal account and are reviewed separately.</p>
           </div>
           <RegisterForm />
