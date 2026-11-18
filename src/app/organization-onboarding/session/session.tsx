@@ -69,7 +69,6 @@ export function OrganizationOnboardingSession() {
             <p style={{ margin: 0, color: "#617486", fontSize: 12 }}>APPLICATION STATUS</p>
             <strong style={{ color: "#123047", fontSize: 18 }}>{data.status.replaceAll("_", " ")}</strong>
             <p style={{ margin: 0, color: "#617486", fontSize: 13 }}>{data.organization?.displayName ?? "Organisation details"} · {data.representative.email}</p>
-            {data.organization?.decisionNote && <p style={{ margin: 0, color: "#8a3b24", fontSize: 13 }}>Platform decision note: {data.organization.decisionNote}</p>}
           </div>
           <p style={{ color: "#617486", fontSize: 13, lineHeight: 1.6, margin: 0 }}>This session expires after two hours and closes after 30 minutes without activity. Its current permission is read-only. Evidence upload and response workflows will be enabled only after the private document-storage integration is in place.</p>
           <button type="button" onClick={closeSession} disabled={closing} style={{ border: "1px solid #cbd7de", borderRadius: 8, padding: 12, background: "#fff", color: "#123047", fontWeight: 700, cursor: closing ? "wait" : "pointer" }}>
