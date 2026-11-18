@@ -46,6 +46,7 @@ export type AuthenticatedUser = {
   organizations: IdentityOrganization[];
   availableWorkspaces: AvailableWorkspace[];
   defaultWorkspace: AvailableWorkspace | null;
+  selectedWorkspace?: AvailableWorkspace | null;
 };
 
 export type LoginResponse = {
@@ -510,5 +511,21 @@ export async function deactivateIndividualWorkspace(): Promise<AuthenticatedUser
     throw new Error(getErrorMessage(payload, 'Unable to deactivate your Individual Workspace.'));
   }
 
+  return refreshAuthenticatedIdentity();
+}
+
+export async function selectWorkspaceContext(workspace: AvailableWorkspace): Promise<AuthenticatedUser> {
+  const response = await apiFetch('/workspaces/context/select', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contextType: workspace.type,
+      contextId: workspace.id ?? null,
+    }),
+  });
+  const payload = await readPayload<{ message?: unknown }>(response);
+  if (!response.ok) {
+    throw new Error(getErrorMessage(payload, 'Unable to switch workspace context.'));
+  }
   return refreshAuthenticatedIdentity();
 }
