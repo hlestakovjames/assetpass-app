@@ -579,20 +579,59 @@ export async function submitOrganizationOnboardingApplication(
   };
 }
 
-export async function verifyOrganizationOnboardingEmail(token: string): Promise<{ message: string; organizationId?: string }> {
+export async function verifyOrganizationOnboardingEmail(token: string): Promise<{ message: string; organizationId?: string; onboardingSessionToken: string; onboardingSessionExpiresAt: string }> {
   const response = await fetch(`${API_BASE_URL}/organizations/onboarding/verify-email`, {
     method: "POST",
-    credentials: "include",
+    credentials: "omit",
     cache: "no-store",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify({ token }),
   });
-  const payload = await readPayload<{ message?: unknown; organizationId?: string }>(response);
+  const payload = await readPayload<{ message?: unknown; organizationId?: string; onboardingSessionToken?: string; onboardingSessionExpiresAt?: string }>(response);
   if (!response.ok) throw new Error(getErrorMessage(payload, "This organisation verification link is invalid or has expired."));
+  if (typeof payload?.onboardingSessionToken !== "string" || typeof payload.onboardingSessionExpiresAt !== "string") {
+    throw new Error("The onboarding session could not be established. Please contact support.");
+  }
   return {
-    message: typeof payload?.message === "string" ? payload.message : "Representative email verified. Your organisation application is awaiting review.",
-    organizationId: payload?.organizationId,
+    message: typeof payload.message === "string" ? payload.message : "Representative email verified. Your organisation application is awaiting review.",
+    organizationId: payload.organizationId,
+    onboardingSessionToken: payload.onboardingSessionToken,
+    onboardingSessionExpiresAt: payload.onboardingSessionExpiresAt,
   };
+}
+
+export type OrganizationOnboardingSessionData = {
+  applicationId: string;
+  status: string;
+  representative: { firstName: string; lastName: string; email: string };
+  organization: { id: string; displayName: string; status: string; decisionNote: string | null } | null;
+  submittedAt: string | null;
+  updatedAt: string;
+};
+
+export async function getOrganizationOnboardingSession(token: string): Promise<OrganizationOnboardingSessionData> {
+  const response = await fetch(`${API_BASE_URL}/organizations/onboarding/session`, {
+    method: "GET",
+    credentials: "omit",
+    cache: "no-store",
+    headers: { Accept: "application/json", "X-Organization-Onboarding-Session": token },
+  });
+  const payload = await readPayload<OrganizationOnboardingSessionData & { message?: unknown }>(response);
+  if (!response.ok || !payload || typeof payload.applicationId !== "string") {
+    throw new Error(getErrorMessage(payload, "Your organisation onboarding session has expired or is unavailable."));
+  }
+  return payload;
+}
+
+export async function closeOrganizationOnboardingSession(token: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/organizations/onboarding/session/close`, {
+    method: "POST",
+    credentials: "omit",
+    cache: "no-store",
+    headers: { Accept: "application/json", "X-Organization-Onboarding-Session": token },
+  });
+  const payload = await readPayload<{ message?: unknown }>(response);
+  if (!response.ok) throw new Error(getErrorMessage(payload, "Unable to close the onboarding session."));
 }
 
 export async function claimOrganizationWithToken(claimToken: string): Promise<AuthenticatedUser> {
