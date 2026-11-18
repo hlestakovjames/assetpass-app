@@ -118,3 +118,9 @@ The repository includes a GitHub Actions workflow for lint and production-build 
 
 The expanded product and technical architecture, requirements, API boundaries, data diagrams, decision register and acceptance criteria are maintained in [assetpass-docs](https://github.com/hlestakovjames/assetpass-docs).
 \n\nWorkspace selection is persisted per authenticated session through `POST /api/v1/workspaces/context/select`. The client refreshes `/auth/me` after selection; backend authority checks remain decisive. A session's selected context is carried forward during refresh-token rotation, while other sessions for the same account keep their own selection. The frontend navigation guard is a usability layer, not an authorization boundary.\n
+
+## Organisation-first onboarding
+
+The registration screen offers a separate organisation application that does not require a personal AssetPass account or password. The representative supplies organisation details, confirms authority and acknowledges the privacy notice. AssetPass emails a single-use verification link. After verification, the organisation enters the existing platform review process. Once approved, the representative can sign in with a verified matching email and claim the organisation from the account page.
+
+The app route `/organization-onboarding/verify` handles the email token. The claim action calls `POST /api/v1/organizations/onboarding/claim`. This initial slice does not yet include legal evidence upload, a restricted onboarding session or a browser-level end-to-end journey.
