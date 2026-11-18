@@ -7,6 +7,7 @@ export const instant = false;
 export const metadata: Metadata = {
   title: "Verify organisation application | AssetPass",
   description: "Verify the representative email for an AssetPass organisation application.",
+  referrer: "no-referrer",
 };
 
 export default async function OrganizationOnboardingVerifyPage({
