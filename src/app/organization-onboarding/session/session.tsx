@@ -19,20 +19,26 @@ export function OrganizationOnboardingSession() {
   const [closing, setClosing] = useState(false);
 
   useEffect(() => {
-    const storedToken = window.sessionStorage.getItem(TOKEN_KEY) ?? "";
-    const expiresAt = window.sessionStorage.getItem(EXPIRY_KEY) ?? "";
-    if (!storedToken || !expiresAt || Date.parse(expiresAt) <= Date.now()) {
-      window.sessionStorage.removeItem(TOKEN_KEY);
-      window.sessionStorage.removeItem(EXPIRY_KEY);
-      setError("This temporary onboarding session is missing or has expired. Use the latest representative email verification link or contact AssetPass support.");
-      setBusy(false);
-      return;
-    }
-    setToken(storedToken);
-    getOrganizationOnboardingSession(storedToken)
-      .then(setData)
-      .catch((cause) => setError(cause instanceof Error ? cause.message : "Unable to load this application."))
-      .finally(() => setBusy(false));
+    let active = true;
+    Promise.resolve().then(() => {
+      const storedToken = window.sessionStorage.getItem(TOKEN_KEY) ?? "";
+      const expiresAt = window.sessionStorage.getItem(EXPIRY_KEY) ?? "";
+      if (!storedToken || !expiresAt || Date.parse(expiresAt) <= Date.now()) {
+        window.sessionStorage.removeItem(TOKEN_KEY);
+        window.sessionStorage.removeItem(EXPIRY_KEY);
+        if (active) {
+          setError("This temporary onboarding session is missing or has expired. Use the latest representative email verification link or contact AssetPass support.");
+          setBusy(false);
+        }
+        return;
+      }
+      if (active) setToken(storedToken);
+      return getOrganizationOnboardingSession(storedToken)
+        .then((result) => { if (active) setData(result); })
+        .catch((cause) => { if (active) setError(cause instanceof Error ? cause.message : "Unable to load this application."); })
+        .finally(() => { if (active) setBusy(false); });
+    });
+    return () => { active = false; };
   }, []);
 
   async function closeSession() {
