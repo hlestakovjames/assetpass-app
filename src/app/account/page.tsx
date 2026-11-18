@@ -227,8 +227,8 @@ function AccountContextPage() {
                     {organization.displayName}
                   </p>
                   <p className="mt-1 text-xs text-slate-600">
-                    Organisation: {organization.status.replaceAll("_", " ")} ·
-                    Membership: {organization.membership.status.replaceAll("_", " ")}
+                    Organisation: {organization.status.replace(/_/g, " ")} ·
+                    Membership: {organization.membership.status.replace(/_/g, " ")}
                   </p>
                 </li>
               ))}
