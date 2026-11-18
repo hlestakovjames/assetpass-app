@@ -27,7 +27,7 @@ export function OrganizationOnboardingSession() {
         window.sessionStorage.removeItem(TOKEN_KEY);
         window.sessionStorage.removeItem(EXPIRY_KEY);
         if (active) {
-          setError("This temporary onboarding session is missing or has expired. Use the latest representative email verification link or contact AssetPass support.");
+          setError("This temporary onboarding session is missing or has expired. Contact AssetPass support to resume the application.");
           setBusy(false);
         }
         return;
@@ -77,7 +77,7 @@ export function OrganizationOnboardingSession() {
           </button>
         </>
       )}
-      {!data && <Link href="/organization-onboarding/verify" style={{ color: "#0f8f84", fontWeight: 700 }}>Return to verification information</Link>}
+      {!data && <Link href="/" style={{ color: "#0f8f84", fontWeight: 700 }}>Return to AssetPass</Link>}
     </div>
   );
 }
