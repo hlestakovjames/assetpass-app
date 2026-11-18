@@ -594,3 +594,12 @@ export async function verifyOrganizationOnboardingEmail(token: string): Promise<
     organizationId: payload?.organizationId,
   };
 }
+
+export async function claimApprovedOrganization(): Promise<AuthenticatedUser> {
+  const response = await apiFetch('/organizations/onboarding/claim', { method: 'POST' });
+  const payload = await readPayload<{ message?: unknown }>(response);
+  if (!response.ok) {
+    throw new Error(getErrorMessage(payload, 'No approved organisation is currently available to claim.'));
+  }
+  return refreshAuthenticatedIdentity();
+}
