@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { OrganizationOnboardingVerification } from "./verification";
 
-export const metadata: Metadata = {
+export const instant = false;\n\nexport const metadata: Metadata = {
   title: "Verify organisation application | AssetPass",
   description: "Verify the representative email for an AssetPass organisation application.",
 };
