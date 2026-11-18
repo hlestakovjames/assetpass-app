@@ -18,7 +18,8 @@ function AccountContextPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [switchingWorkspace, setSwitchingWorkspace] = useState<string | null>(null);
-  const [claimingOrganization, setClaimingOrganization] = useState(false);\n  const [organizationClaimToken, setOrganizationClaimToken] = useState("");
+  const [claimingOrganization, setClaimingOrganization] = useState(false);
+  const [organizationClaimToken, setOrganizationClaimToken] = useState("");
 
   const workspaces = user?.availableWorkspaces ?? [];
   const hasIndividualWorkspace = workspaces.some(
@@ -31,10 +32,15 @@ function AccountContextPage() {
   );
 
   async function handleClaimOrganization() {
-    if (!organizationClaimToken.trim()) {\n      setError("Enter the one-time claim code sent to the representative email address after organisation approval.");\n      return;\n    }\n    setClaimingOrganization(true);
+    if (!organizationClaimToken.trim()) {
+      setError("Enter the one-time claim code sent to the representative email address after organisation approval.");
+      return;
+    }
+    setClaimingOrganization(true);
     setError("");
     try {
-      const refreshedUser = await claimOrganizationWithToken(organizationClaimToken.trim());\n      setOrganizationClaimToken("");
+      const refreshedUser = await claimOrganizationWithToken(organizationClaimToken.trim());
+      setOrganizationClaimToken("");
       const organizationWorkspace = refreshedUser.availableWorkspaces.find(
         (workspace) => workspace.type === "organization",
       );
