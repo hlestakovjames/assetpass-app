@@ -19,6 +19,10 @@ import {
 import styles from "../login/login.module.css";
 
 type AccountType = "individual" | "organization";
+
+function isOrganizationAccount(value: AccountType | null): boolean {
+  return value === "organization";
+}
 type FormValues = Record<string, string>;
 type RegistrationField = {
   key: string;
@@ -423,7 +427,7 @@ export function RegisterForm() {
     }
   }
 
-  if (accountType === "organization") {
+  if (isOrganizationAccount(accountType)) {
     return <OrganizationOnboardingForm onBack={() => { setAccountType(null); setStep(0); setError(""); }} />;
   }
 
