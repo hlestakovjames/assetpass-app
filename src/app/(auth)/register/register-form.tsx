@@ -446,10 +446,10 @@ export function RegisterForm() {
   if (!accountType) {
     return (
       <div className={styles.form}>
-        <p style={{ color: "#526779", fontSize: 13, margin: 0 }}>Choose the type of account you want to create.</p>
+        <p style={{ color: "#526779", fontSize: 13, margin: 0 }}>Choose how you want to get started.</p>
         <button type="button" className={styles.submit} onClick={() => { setAccountType("individual"); setStep(0); }}>Individual account <span aria-hidden="true">→</span></button>
-        <button type="button" className={styles.submit} onClick={() => { setAccountType("organization"); setStep(0); }}>Organization account <span aria-hidden="true">→</span></button>
-        <p className={styles.formNote}>You can create or join an organization later using the same individual account.</p>
+        <button type="button" className={styles.submit} onClick={() => { setAccountType("organization"); setStep(0); }}>Organisation application <span aria-hidden="true">→</span></button>
+        <p className={styles.formNote}>An organisation can apply independently. You can create or use a personal account later if you need to claim an approved organisation.</p>
       </div>
     );
   }
