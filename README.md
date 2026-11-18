@@ -117,3 +117,4 @@ The repository includes a GitHub Actions workflow for lint and production-build 
 ## Source of truth
 
 The expanded product and technical architecture, requirements, API boundaries, data diagrams, decision register and acceptance criteria are maintained in [assetpass-docs](https://github.com/hlestakovjames/assetpass-docs).
+\n\nWorkspace selection is persisted per authenticated session through `POST /api/v1/workspaces/context/select`. The client refreshes `/auth/me` after selection; backend authority checks remain decisive. A session's selected context is carried forward during refresh-token rotation, while other sessions for the same account keep their own selection. The frontend navigation guard is a usability layer, not an authorization boundary.\n
