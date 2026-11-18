@@ -7,6 +7,7 @@ import { AuthGuard } from "@/features/authentication/auth-guard";
 import { useAuth } from "@/features/authentication/auth-provider";
 import {
   activateIndividualWorkspace,
+  claimApprovedOrganization,
   deactivateIndividualWorkspace,
   selectWorkspaceContext,
 } from "@/features/authentication/auth-client";
@@ -16,7 +17,7 @@ function AccountContextPage() {
   const { user, logout } = useAuth();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [switchingWorkspace, setSwitchingWorkspace] = useState<string | null>(null);
+  const [switchingWorkspace, setSwitchingWorkspace] = useState<string | null>(null);\n  const [claimingOrganization, setClaimingOrganization] = useState(false);
 
   const workspaces = user?.availableWorkspaces ?? [];
   const hasIndividualWorkspace = workspaces.some(
@@ -27,6 +28,22 @@ function AccountContextPage() {
       organization.status !== "active" ||
       organization.membership.status !== "active",
   );
+
+  async function handleClaimOrganization() {
+    setClaimingOrganization(true);
+    setError("");
+    try {
+      const refreshedUser = await claimApprovedOrganization();
+      const organizationWorkspace = refreshedUser.availableWorkspaces.find(
+        (workspace) => workspace.type === "organization",
+      );
+      if (organizationWorkspace) router.push(organizationWorkspace.href);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Unable to claim an approved organisation.");
+    } finally {
+      setClaimingOrganization(false);
+    }
+  }
 
   async function handleSelectWorkspace(workspace: (typeof workspaces)[number]) {
     const key = `${workspace.type}-${workspace.id ?? "platform"}`;
@@ -229,6 +246,21 @@ function AccountContextPage() {
             Access to the Individual Workspace is paused until it is activated
             again.
           </p>
+        </section>
+
+        <section className="mt-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-semibold">Claim an approved organisation</h2>
+          <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-600">
+            If you submitted an organisation application using this verified email address and the platform has approved it, you can link it to this AssetPass account. This does not create another personal account.
+          </p>
+          <button
+            type="button"
+            onClick={handleClaimOrganization}
+            disabled={claimingOrganization}
+            className="mt-4 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
+          >
+            {claimingOrganization ? "Checking approved applications…" : "Check and claim organisation"}
+          </button>
         </section>
 
         {pendingOrganizations.length > 0 && (
