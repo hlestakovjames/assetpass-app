@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { registerAccount, type RegistrationInput } from "@/features/authentication/auth-client";
+import { OrganizationOnboardingForm } from "./organization-onboarding-form";
 import {
   CONTACT_POSITION_OPTIONS,
   INDUSTRY_SECTOR_OPTIONS,
@@ -420,6 +421,10 @@ export function RegisterForm() {
     } finally {
       setSubmitting(false);
     }
+  }
+
+  if (accountType === "organization") {
+    return <OrganizationOnboardingForm onBack={() => { setAccountType(null); setStep(0); setError(""); }} />;
   }
 
   if (success) {
