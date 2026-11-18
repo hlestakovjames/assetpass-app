@@ -529,3 +529,68 @@ export async function selectWorkspaceContext(workspace: AvailableWorkspace): Pro
   }
   return refreshAuthenticatedIdentity();
 }
+
+export type OrganizationOnboardingInput = {
+  representativeFirstName: string;
+  representativeLastName: string;
+  representativeEmail: string;
+  representativePosition: string;
+  registrationRelationship: string;
+  authorityConfirmation: "yes";
+  privacyNoticeAcknowledged: true;
+  organizationDisplayName: string;
+  organizationType: string;
+  legalName?: string;
+  industrySector?: string;
+  legalStructure?: string;
+  registrationNumber?: string;
+  registrationAuthority?: string;
+  registrationDate?: string;
+  contactEmail: string;
+  contactPhone: string;
+  alternativeEmail?: string;
+  website?: string;
+  description?: string;
+  countryCode?: string;
+  county?: string;
+  city?: string;
+  physicalAddress: string;
+  postalAddress?: string;
+  postalCode?: string;
+  taxIdentifier?: string;
+};
+
+export async function submitOrganizationOnboardingApplication(
+  input: OrganizationOnboardingInput,
+): Promise<{ applicationId: string; status: string; message: string }> {
+  const response = await fetch(`${API_BASE_URL}/organizations/onboarding/applications`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify(input),
+  });
+  const payload = await readPayload<{ applicationId?: string; status?: string; message?: unknown }>(response);
+  if (!response.ok) throw new Error(getErrorMessage(payload, "Unable to submit the organisation application."));
+  if (!payload || typeof payload.applicationId !== "string") throw new Error("The onboarding service returned an invalid response.");
+  return {
+    applicationId: payload.applicationId,
+    status: payload.status ?? "pending_email_verification",
+    message: typeof payload.message === "string" ? payload.message : "Check the representative email address for a verification link.",
+  };
+}
+
+export async function verifyOrganizationOnboardingEmail(token: string): Promise<{ message: string; organizationId?: string }> {
+  const response = await fetch(`${API_BASE_URL}/organizations/onboarding/verify-email`, {
+    method: "POST",
+    credentials: "include",
+    cache: "no-store",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({ token }),
+  });
+  const payload = await readPayload<{ message?: unknown; organizationId?: string }>(response);
+  if (!response.ok) throw new Error(getErrorMessage(payload, "This organisation verification link is invalid or has expired."));
+  return {
+    message: typeof payload?.message === "string" ? payload.message : "Representative email verified. Your organisation application is awaiting review.",
+    organizationId: payload?.organizationId,
+  };
+}
