@@ -604,7 +604,7 @@ export type OrganizationOnboardingSessionData = {
   applicationId: string;
   status: string;
   representative: { firstName: string; lastName: string; email: string };
-  organization: { id: string; displayName: string; status: string; decisionNote: string | null } | null;
+  organization: { id: string; displayName: string; status: string } | null;
   submittedAt: string | null;
   updatedAt: string;
 };
