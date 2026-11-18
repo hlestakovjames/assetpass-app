@@ -8,6 +8,7 @@ import { useAuth } from "@/features/authentication/auth-provider";
 import {
   activateIndividualWorkspace,
   deactivateIndividualWorkspace,
+  selectWorkspaceContext,
 } from "@/features/authentication/auth-client";
 
 function AccountContextPage() {
@@ -15,6 +16,7 @@ function AccountContextPage() {
   const { user, logout } = useAuth();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [switchingWorkspace, setSwitchingWorkspace] = useState<string | null>(null);
 
   const workspaces = user?.availableWorkspaces ?? [];
   const hasIndividualWorkspace = workspaces.some(
@@ -25,6 +27,20 @@ function AccountContextPage() {
       organization.status !== "active" ||
       organization.membership.status !== "active",
   );
+
+  async function handleSelectWorkspace(workspace: (typeof workspaces)[number]) {
+    const key = `${workspace.type}-${workspace.id ?? "platform"}`;
+    setSwitchingWorkspace(key);
+    setError("");
+    try {
+      await selectWorkspaceContext(workspace);
+      router.push(workspace.href);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Unable to switch workspace context.");
+    } finally {
+      setSwitchingWorkspace(null);
+    }
+  }
 
   async function handleActivate() {
     setBusy(true);
@@ -129,12 +145,19 @@ function AccountContextPage() {
                     {workspace.type} workspace
                   </p>
                 </div>
-                <Link
-                  href={workspace.href}
-                  className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+                <button
+                  type="button"
+                  onClick={() => handleSelectWorkspace(workspace)}
+                  disabled={switchingWorkspace !== null}
+                  className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
                 >
-                  Open workspace
-                </Link>
+                  {switchingWorkspace === `${workspace.type}-${workspace.id ?? "platform"}`
+                    ? "Switching…"
+                    : user?.selectedWorkspace?.type === workspace.type &&
+                        user.selectedWorkspace?.id === workspace.id
+                      ? "Current workspace"
+                      : "Open workspace"}
+                </button>
               </div>
             ))}
 
