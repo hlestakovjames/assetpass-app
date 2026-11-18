@@ -595,11 +595,15 @@ export async function verifyOrganizationOnboardingEmail(token: string): Promise<
   };
 }
 
-export async function claimApprovedOrganization(): Promise<AuthenticatedUser> {
-  const response = await apiFetch('/organizations/onboarding/claim', { method: 'POST' });
+export async function claimOrganizationWithToken(claimToken: string): Promise<AuthenticatedUser> {
+  const response = await apiFetch('/organizations/onboarding/claim', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ claimToken }),
+  });
   const payload = await readPayload<{ message?: unknown }>(response);
   if (!response.ok) {
-    throw new Error(getErrorMessage(payload, 'No approved organisation is currently available to claim.'));
+    throw new Error(getErrorMessage(payload, 'Unable to claim the organisation. Check the claim code and signed-in representative email.'));
   }
   return refreshAuthenticatedIdentity();
 }
