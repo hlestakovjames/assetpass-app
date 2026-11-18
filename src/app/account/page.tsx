@@ -30,10 +30,8 @@ function AccountContextPage() {
     setBusy(true);
     setError("");
     try {
-      const refreshed = await activateIndividualWorkspace();
-      router.push(
-        refreshed.defaultWorkspace?.href ?? "/individual/overview",
-      );
+      await activateIndividualWorkspace();
+      router.push("/individual/overview");
     } catch (cause) {
       setError(
         cause instanceof Error
