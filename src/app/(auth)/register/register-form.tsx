@@ -428,7 +428,7 @@ export function RegisterForm() {
         <div className={styles.securityNote} style={{ marginTop: 0, padding: 14, border: "1px solid #b9e5d8", borderRadius: 8, background: "#effaf6", color: "#176b58" }}>
           <span className={styles.securityIcon}>✓</span><span>{success}</span>
         </div>
-        <p className={styles.formNote}>Your user account is active immediately. Organization workspaces become available after the organization is reviewed and approved.</p>
+        <p className={styles.formNote}>Your account is active immediately. An Individual Workspace is optional and can be activated after sign-in. Organization workspaces become available after the organization is reviewed and approved.</p>
         <Link href="/login" style={{ color: "#0f8f84", textAlign: "center", fontSize: 12, fontWeight: 700 }}>Continue to sign in</Link>
       </div>
     );
