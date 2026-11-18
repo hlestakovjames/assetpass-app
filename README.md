@@ -117,10 +117,13 @@ The repository includes a GitHub Actions workflow for lint and production-build 
 ## Source of truth
 
 The expanded product and technical architecture, requirements, API boundaries, data diagrams, decision register and acceptance criteria are maintained in [assetpass-docs](https://github.com/hlestakovjames/assetpass-docs).
-\n\nWorkspace selection is persisted per authenticated session through `POST /api/v1/workspaces/context/select`. The client refreshes `/auth/me` after selection; backend authority checks remain decisive. A session's selected context is carried forward during refresh-token rotation, while other sessions for the same account keep their own selection. The frontend navigation guard is a usability layer, not an authorization boundary.\n
+
+
+Workspace selection is persisted per authenticated session through `POST /api/v1/workspaces/context/select`. The client refreshes `/auth/me` after selection; backend authority checks remain decisive. A session's selected context is carried forward during refresh-token rotation, while other sessions for the same account keep their own selection. The frontend navigation guard is a usability layer, not an authorization boundary.
+
 
 ## Organisation-first onboarding
 
 The registration screen offers a separate organisation application that does not require a personal AssetPass account or password. The representative supplies organisation details, confirms authority and acknowledges the privacy notice. AssetPass emails a single-use verification link. After verification, the organisation enters the existing platform review process. Once approved, the representative receives a separate one-time claim code by email. They sign in with an AssetPass account using the same representative email, enter the code on the account page, and claim the organisation. The claim code—not the early-launch account emailVerifiedAt flag—proves control of the representative mailbox.
 
-The app route `/organization-onboarding/verify` handles the email token. The claim action calls `POST /api/v1/organizations/onboarding/claim`. This initial slice does not yet include legal evidence upload, a restricted onboarding session or a browser-level end-to-end journey.
+The app route `/organization-onboarding/verify` handles the email token. The claim action calls `POST /api/v1/organizations/onboarding/claim`. After verification, the API returns a short-lived application-bound read-only onboarding session. The app keeps its bearer token in tab-scoped `sessionStorage` and uses it only for `GET /api/v1/organizations/onboarding/session` and `POST /api/v1/organizations/onboarding/session/close`. The session is not an AssetPass account or JWT login. Private evidence upload, session recovery and browser-level end-to-end testing remain outstanding.
