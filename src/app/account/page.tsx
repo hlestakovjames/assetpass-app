@@ -17,7 +17,8 @@ function AccountContextPage() {
   const { user, logout } = useAuth();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [switchingWorkspace, setSwitchingWorkspace] = useState<string | null>(null);\n  const [claimingOrganization, setClaimingOrganization] = useState(false);
+  const [switchingWorkspace, setSwitchingWorkspace] = useState<string | null>(null);
+  const [claimingOrganization, setClaimingOrganization] = useState(false);
 
   const workspaces = user?.availableWorkspaces ?? [];
   const hasIndividualWorkspace = workspaces.some(
