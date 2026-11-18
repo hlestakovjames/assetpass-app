@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { verifyOrganizationOnboardingEmail } from "@/features/authentication/auth-client";
 
@@ -9,6 +10,7 @@ export function OrganizationOnboardingVerification({ token }: { token: string })
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [verified, setVerified] = useState(false);
+  const router = useRouter();
 
   async function verify() {
     setBusy(true);
@@ -16,8 +18,11 @@ export function OrganizationOnboardingVerification({ token }: { token: string })
     setMessage("");
     try {
       const result = await verifyOrganizationOnboardingEmail(token);
+      window.sessionStorage.setItem("assetpass.organizationOnboarding.token", result.onboardingSessionToken);
+      window.sessionStorage.setItem("assetpass.organizationOnboarding.expiresAt", result.onboardingSessionExpiresAt);
       setMessage(result.message);
       setVerified(true);
+      router.push("/organization-onboarding/session");
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Unable to verify this organisation application.");
     } finally {
@@ -36,7 +41,7 @@ export function OrganizationOnboardingVerification({ token }: { token: string })
           {busy ? "Verifying…" : "Verify representative email"}
         </button>
       ) : (
-        <Link href="/login" style={{ color: "#0f8f84", fontWeight: 700 }}>Sign in or create an AssetPass account later →</Link>
+        <Link href="/organization-onboarding/session" style={{ color: "#0f8f84", fontWeight: 700 }}>Continue to your restricted application session →</Link>
       )}
     </div>
   );
