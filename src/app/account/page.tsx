@@ -7,7 +7,7 @@ import { AuthGuard } from "@/features/authentication/auth-guard";
 import { useAuth } from "@/features/authentication/auth-provider";
 import {
   activateIndividualWorkspace,
-  claimApprovedOrganization,
+  claimOrganizationWithToken,
   deactivateIndividualWorkspace,
   selectWorkspaceContext,
 } from "@/features/authentication/auth-client";
@@ -18,7 +18,7 @@ function AccountContextPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [switchingWorkspace, setSwitchingWorkspace] = useState<string | null>(null);
-  const [claimingOrganization, setClaimingOrganization] = useState(false);
+  const [claimingOrganization, setClaimingOrganization] = useState(false);\n  const [organizationClaimToken, setOrganizationClaimToken] = useState("");
 
   const workspaces = user?.availableWorkspaces ?? [];
   const hasIndividualWorkspace = workspaces.some(
@@ -31,10 +31,10 @@ function AccountContextPage() {
   );
 
   async function handleClaimOrganization() {
-    setClaimingOrganization(true);
+    if (!organizationClaimToken.trim()) {\n      setError("Enter the one-time claim code sent to the representative email address after organisation approval.");\n      return;\n    }\n    setClaimingOrganization(true);
     setError("");
     try {
-      const refreshedUser = await claimApprovedOrganization();
+      const refreshedUser = await claimOrganizationWithToken(organizationClaimToken.trim());\n      setOrganizationClaimToken("");
       const organizationWorkspace = refreshedUser.availableWorkspaces.find(
         (workspace) => workspace.type === "organization",
       );
@@ -252,13 +252,21 @@ function AccountContextPage() {
         <section className="mt-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold">Claim an approved organisation</h2>
           <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-600">
-            If you submitted an organisation application using this verified email address and the platform has approved it, you can link it to this AssetPass account. This does not create another personal account.
+            After platform approval, AssetPass sends a one-time claim code to the representative email. Sign in with an AssetPass account using that same email address, then enter the code here. The code proves control of the representative inbox; it is not your password.
           </p>
+          <input
+            type="text"
+            value={organizationClaimToken}
+            onChange={(event) => setOrganizationClaimToken(event.target.value)}
+            placeholder="One-time organisation claim code"
+            autoComplete="one-time-code"
+            className="mt-4 w-full rounded-lg border border-slate-300 px-3 py-3 text-sm outline-none focus:border-slate-500"
+          />
           <button
             type="button"
             onClick={handleClaimOrganization}
             disabled={claimingOrganization}
-            className="mt-4 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
+            className="mt-3 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
           >
             {claimingOrganization ? "Checking approved applications…" : "Check and claim organisation"}
           </button>
