@@ -345,7 +345,7 @@ export function OrganizationOnboardingForm({ onBack }: { onBack: () => void }) {
           <label htmlFor="county">County / region</label>
           {manualCounty ? (
             <div className={styles.inputWrap}>
-              <input id="county" value={values.countyOther ?? (values.county === "__other__" ? "" : values.county ?? "")} onChange={(event) => setValue("countyOther", event.target.value)} disabled={submitting} maxLength={160} placeholder="Enter county / region" />
+              <input id="county" value={values.countyOther ?? (values.county === "__other__" ? "" : values.county ?? "")} onChange={(event) => setValues((previous) => ({ ...previous, county: "__other__", countyOther: event.target.value }))} disabled={submitting} maxLength={160} placeholder="Enter county / region" />
             </div>
           ) : (
             <div className={styles.inputWrap}>
@@ -362,7 +362,7 @@ export function OrganizationOnboardingForm({ onBack }: { onBack: () => void }) {
           <label htmlFor="city">City / town</label>
           {manualCity ? (
             <div className={styles.inputWrap}>
-              <input id="city" value={values.cityOther ?? (values.city === "__other__" ? "" : values.city ?? "")} onChange={(event) => setValue("cityOther", event.target.value)} disabled={submitting} maxLength={160} placeholder="Enter city / town" />
+              <input id="city" value={values.cityOther ?? (values.city === "__other__" ? "" : values.city ?? "")} onChange={(event) => setValues((previous) => ({ ...previous, city: "__other__", cityOther: event.target.value }))} disabled={submitting} maxLength={160} placeholder="Enter city / town" />
             </div>
           ) : (
             <div className={styles.inputWrap}>
@@ -379,7 +379,7 @@ export function OrganizationOnboardingForm({ onBack }: { onBack: () => void }) {
           <label htmlFor="registrationAuthority">Registration authority</label>
           {manualAuthority ? (
             <div className={styles.inputWrap}>
-              <input id="registrationAuthority" value={values.registrationAuthorityOther ?? (values.registrationAuthority === "Other" ? "" : values.registrationAuthority ?? "")} onChange={(event) => setValue("registrationAuthorityOther", event.target.value)} disabled={submitting} maxLength={160} placeholder="Enter registration authority" />
+              <input id="registrationAuthority" value={values.registrationAuthorityOther ?? (values.registrationAuthority === "Other" ? "" : values.registrationAuthority ?? "")} onChange={(event) => setValues((previous) => ({ ...previous, registrationAuthority: "Other", registrationAuthorityOther: event.target.value }))} disabled={submitting} maxLength={160} placeholder="Enter registration authority" />
             </div>
           ) : (
             <div className={styles.inputWrap}>
