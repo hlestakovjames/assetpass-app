@@ -45,7 +45,8 @@ export type AuthenticatedUser = {
   platformPermissions: string[];
   organizations: IdentityOrganization[];
   availableWorkspaces: AvailableWorkspace[];
-  defaultWorkspace: AvailableWorkspace;
+  defaultWorkspace: AvailableWorkspace | null;
+  selectedWorkspace?: AvailableWorkspace | null;
 };
 
 export type LoginResponse = {
@@ -467,4 +468,181 @@ export async function resendEmailVerification(email: string): Promise<{ message:
     throw new Error(getErrorMessage(payload, "Unable to request another verification email."));
   }
   return { message: payload?.message ?? "If the address can be registered, a verification email will be sent shortly." };
+}
+
+
+export async function refreshAuthenticatedIdentity(): Promise<AuthenticatedUser> {
+  const response = await apiFetch('/auth/me', {
+    method: 'GET',
+    cache: 'no-store',
+  });
+  const user = await readPayload<AuthenticatedUser>(response);
+
+  if (!response.ok || !user || typeof user.id !== 'string' || !accessToken) {
+    throw new Error(
+      getErrorMessage(user, 'Unable to refresh your AssetPass account context.'),
+    );
+  }
+
+  setAuthenticatedState(accessToken, user);
+  return user;
+}
+
+export async function activateIndividualWorkspace(): Promise<AuthenticatedUser> {
+  const response = await apiFetch('/workspaces/individual/activate', {
+    method: 'POST',
+  });
+  const payload = await readPayload<{ message?: unknown }>(response);
+
+  if (!response.ok) {
+    throw new Error(getErrorMessage(payload, 'Unable to activate your Individual Workspace.'));
+  }
+
+  return refreshAuthenticatedIdentity();
+}
+
+export async function deactivateIndividualWorkspace(): Promise<AuthenticatedUser> {
+  const response = await apiFetch('/workspaces/individual/deactivate', {
+    method: 'POST',
+  });
+  const payload = await readPayload<{ message?: unknown }>(response);
+
+  if (!response.ok) {
+    throw new Error(getErrorMessage(payload, 'Unable to deactivate your Individual Workspace.'));
+  }
+
+  return refreshAuthenticatedIdentity();
+}
+
+export async function selectWorkspaceContext(workspace: AvailableWorkspace): Promise<AuthenticatedUser> {
+  const response = await apiFetch('/workspaces/context/select', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contextType: workspace.type,
+      contextId: workspace.id ?? null,
+    }),
+  });
+  const payload = await readPayload<{ message?: unknown }>(response);
+  if (!response.ok) {
+    throw new Error(getErrorMessage(payload, 'Unable to switch workspace context.'));
+  }
+  return refreshAuthenticatedIdentity();
+}
+
+export type OrganizationOnboardingInput = {
+  representativeFirstName: string;
+  representativeLastName: string;
+  representativeEmail: string;
+  representativePosition: string;
+  registrationRelationship: string;
+  authorityConfirmation: "yes";
+  privacyNoticeAcknowledged: true;
+  organizationDisplayName: string;
+  organizationType: string;
+  legalName?: string;
+  industrySector?: string;
+  legalStructure?: string;
+  registrationNumber?: string;
+  registrationAuthority?: string;
+  registrationDate?: string;
+  contactEmail: string;
+  contactPhone: string;
+  alternativeEmail?: string;
+  website?: string;
+  description?: string;
+  countryCode?: string;
+  county?: string;
+  city?: string;
+  physicalAddress: string;
+  postalAddress?: string;
+  postalCode?: string;
+  taxIdentifier?: string;
+};
+
+export async function submitOrganizationOnboardingApplication(
+  input: OrganizationOnboardingInput,
+): Promise<{ applicationId: string; status: string; message: string }> {
+  const response = await fetch(`${API_BASE_URL}/organizations/onboarding/applications`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify(input),
+  });
+  const payload = await readPayload<{ applicationId?: string; status?: string; message?: unknown }>(response);
+  if (!response.ok) throw new Error(getErrorMessage(payload, "Unable to submit the organisation application."));
+  if (!payload || typeof payload.applicationId !== "string") throw new Error("The onboarding service returned an invalid response.");
+  return {
+    applicationId: payload.applicationId,
+    status: payload.status ?? "pending_email_verification",
+    message: typeof payload.message === "string" ? payload.message : "Check the representative email address for a verification link.",
+  };
+}
+
+export async function verifyOrganizationOnboardingEmail(token: string): Promise<{ message: string; organizationId?: string; onboardingSessionToken: string; onboardingSessionExpiresAt: string }> {
+  const response = await fetch(`${API_BASE_URL}/organizations/onboarding/verify-email`, {
+    method: "POST",
+    credentials: "omit",
+    cache: "no-store",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({ token }),
+  });
+  const payload = await readPayload<{ message?: unknown; organizationId?: string; onboardingSessionToken?: string; onboardingSessionExpiresAt?: string }>(response);
+  if (!response.ok) throw new Error(getErrorMessage(payload, "This organisation verification link is invalid or has expired."));
+  if (typeof payload?.onboardingSessionToken !== "string" || typeof payload.onboardingSessionExpiresAt !== "string") {
+    throw new Error("The onboarding session could not be established. Please contact support.");
+  }
+  return {
+    message: typeof payload.message === "string" ? payload.message : "Representative email verified. Your organisation application is awaiting review.",
+    organizationId: payload.organizationId,
+    onboardingSessionToken: payload.onboardingSessionToken,
+    onboardingSessionExpiresAt: payload.onboardingSessionExpiresAt,
+  };
+}
+
+export type OrganizationOnboardingSessionData = {
+  applicationId: string;
+  status: string;
+  representative: { firstName: string; lastName: string; email: string };
+  organization: { id: string; displayName: string; status: string } | null;
+  submittedAt: string | null;
+  updatedAt: string;
+};
+
+export async function getOrganizationOnboardingSession(token: string): Promise<OrganizationOnboardingSessionData> {
+  const response = await fetch(`${API_BASE_URL}/organizations/onboarding/session`, {
+    method: "GET",
+    credentials: "omit",
+    cache: "no-store",
+    headers: { Accept: "application/json", "X-Organization-Onboarding-Session": token },
+  });
+  const payload = await readPayload<OrganizationOnboardingSessionData & { message?: unknown }>(response);
+  if (!response.ok || !payload || typeof payload.applicationId !== "string") {
+    throw new Error(getErrorMessage(payload, "Your organisation onboarding session has expired or is unavailable."));
+  }
+  return payload;
+}
+
+export async function closeOrganizationOnboardingSession(token: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/organizations/onboarding/session/close`, {
+    method: "POST",
+    credentials: "omit",
+    cache: "no-store",
+    headers: { Accept: "application/json", "X-Organization-Onboarding-Session": token },
+  });
+  const payload = await readPayload<{ message?: unknown }>(response);
+  if (!response.ok) throw new Error(getErrorMessage(payload, "Unable to close the onboarding session."));
+}
+
+export async function claimOrganizationWithToken(claimToken: string): Promise<AuthenticatedUser> {
+  const response = await apiFetch('/organizations/onboarding/claim', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ claimToken }),
+  });
+  const payload = await readPayload<{ message?: unknown }>(response);
+  if (!response.ok) {
+    throw new Error(getErrorMessage(payload, 'Unable to claim the organisation. Check the claim code and signed-in representative email.'));
+  }
+  return refreshAuthenticatedIdentity();
 }

@@ -14,6 +14,7 @@ import {
   login as authenticate,
   logout as endSession,
   restoreSession,
+  refreshAuthenticatedIdentity,
   subscribeToAuth,
   type AuthenticatedUser,
   type LoginResponse,
@@ -31,6 +32,7 @@ type AuthContextValue = {
   login: (email: string, password: string) => Promise<LoginResponse>;
   logout: () => Promise<void>;
   retrySessionRestore: () => Promise<void>;
+  refreshIdentity: () => Promise<AuthenticatedUser>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -96,6 +98,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const refreshIdentity = useCallback(async () => {
+    const refreshedUser = await refreshAuthenticatedIdentity();
+    setUser(refreshedUser);
+    setStatus('authenticated');
+    return refreshedUser;
+  }, []);
+
   const value = useMemo(
     () => ({
       user,
@@ -103,8 +112,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       login,
       logout,
       retrySessionRestore,
+      refreshIdentity,
     }),
-    [user, status, login, logout, retrySessionRestore],
+    [user, status, login, logout, retrySessionRestore, refreshIdentity],
   );
 
   return (

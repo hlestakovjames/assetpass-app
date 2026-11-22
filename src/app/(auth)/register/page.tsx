@@ -5,7 +5,7 @@ import styles from "../login/login.module.css";
 
 export const metadata: Metadata = {
   title: "Create account | AssetPass",
-  description: "Create your AssetPass identity and access your workspace immediately.",
+  description: "Create your AssetPass account and activate the workspaces you need.",
 };
 
 export default function RegisterPage() {
@@ -22,13 +22,13 @@ export default function RegisterPage() {
         <div className={styles.card}>
           <div className={styles.cardHeading}>
             <span className={styles.eyebrow}>GET STARTED</span>
-            <h1>Create your account</h1>
-            <p>Create an individual or organization account through a guided registration process. Individual accounts activate immediately; organizations are reviewed before their workspace is enabled.</p>
+            <h1>Get started with AssetPass</h1>
+            <p>Create a personal AssetPass account or submit an organisation application. Organisation applications do not require a personal account and are reviewed separately.</p>
           </div>
           <RegisterForm />
           <div className={styles.securityNote}>
             <span className={styles.securityIcon}>✓</span>
-            <span>Your account is activated immediately after registration</span>
+            <span>Personal accounts activate immediately; organisation applications follow a separate review process</span>
           </div>
         </div>
         <div className={styles.marketplace}>
