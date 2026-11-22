@@ -102,7 +102,7 @@ export function RolesPermissionsManagement() {
   }
 
   return (
-    <PlatformAdminFrame title="Roles & permissions" description="Manage delegated Central Platform Administrator assignments and their explicit platform permissions. The Global Administrator retains global authority; organization roles cannot grant platform access.">
+    <PlatformAdminFrame title="Roles & permissions" description="Manage delegated Central Platform Administrator assignments and their explicit platform permissions. The Global Administrator retains all platform operational permissions; private individual and organisation records remain separately controlled. Organization roles cannot grant platform access.">
       {error && <div className="mb-5"><ErrorNotice message={error} /></div>}
       {notice && <div role="status" className="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">{notice}</div>}
       <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
