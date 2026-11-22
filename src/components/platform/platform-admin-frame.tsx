@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { useAuth } from "@/features/authentication/auth-provider";
+import { AssetPassBrand } from "@/components/shared/assetpass-brand";
 
 const navigation = [
   { href: "/platform/overview", label: "Overview", icon: "▦" },
@@ -62,9 +63,7 @@ export function PlatformAdminFrame({
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900">
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-slate-200 bg-white lg:flex">
-        <Link href="/platform/overview" className="flex h-20 items-center border-b border-slate-100 px-6 text-lg font-bold tracking-tight text-slate-900">
-          Asset<span className="text-teal-600">Pass</span>
-        </Link>
+        <AssetPassBrand href="/platform/overview" className="h-20 border-b border-slate-100 px-6" />
         <div className="border-b border-slate-100 px-5 py-4">
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">Workspace</p>
           <p className="mt-1 text-sm font-semibold text-slate-800">Platform Administration</p>
@@ -87,7 +86,7 @@ export function PlatformAdminFrame({
           <button type="button" aria-label="Close navigation" onClick={() => setMobileMenuOpen(false)} className="absolute inset-0 bg-slate-950/50" />
           <aside id="platform-mobile-navigation" aria-label="Platform navigation" className="absolute inset-y-0 left-0 flex w-[min(84vw,320px)] flex-col bg-white shadow-2xl">
             <div className="flex h-16 items-center justify-between border-b border-slate-100 px-5">
-              <Link href="/platform/overview" onClick={() => setMobileMenuOpen(false)} className="text-lg font-bold">Asset<span className="text-teal-600">Pass</span></Link>
+              <AssetPassBrand href="/platform/overview" className="min-w-0" />
               <button type="button" aria-label="Close navigation" onClick={() => setMobileMenuOpen(false)} className="grid size-10 place-items-center rounded-lg text-2xl text-slate-500 hover:bg-slate-100">×</button>
             </div>
             <div className="border-b border-slate-100 px-5 py-4">
