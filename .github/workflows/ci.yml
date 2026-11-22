@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - feat/functional-platform-identity-organizations
+      - feat/global-administrator-role-alignment
   pull_request:
     branches:
       - main
