@@ -62,7 +62,7 @@ export function OrganizationOnboardingForm({ onBack }: { onBack: () => void }) {
   const [regions, setRegions] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
   const [countriesLoading, setCountriesLoading] = useState(true);
-  const [regionsLoading, setRegionsLoading] = useState(false);
+  const [regionsLoading, setRegionsLoading] = useState(true);
   const [citiesLoading, setCitiesLoading] = useState(false);
   const [locationError, setLocationError] = useState("");
   const [authority, setAuthority] = useState(false);
@@ -212,10 +212,12 @@ export function OrganizationOnboardingForm({ onBack }: { onBack: () => void }) {
   const authorityOptions = REGISTRATION_AUTHORITY_OPTIONS[values.countryCode ?? "KE"] ?? ["Other"];
   const manualCounty =
     values.county === "__other__" ||
-    (Boolean(values.countryName) && !regionsLoading && regions.length === 0);
+    !values.countryName ||
+    (!regionsLoading && regions.length === 0);
   const manualCity =
     values.city === "__other__" ||
     values.county === "__other__" ||
+    !values.countryName ||
     (Boolean(values.county) && values.county !== "__other__" && !citiesLoading && cities.length === 0);
   const manualAuthority =
     values.registrationAuthority === "Other" || authorityOptions.length === 1;
@@ -343,7 +345,7 @@ export function OrganizationOnboardingForm({ onBack }: { onBack: () => void }) {
           <label htmlFor="county">County / region</label>
           {manualCounty ? (
             <div className={styles.inputWrap}>
-              <input id="county" value={values.countyOther ?? values.county ?? ""} onChange={(event) => setValue("countyOther", event.target.value)} disabled={submitting} maxLength={160} placeholder="Enter county / region" />
+              <input id="county" value={values.countyOther ?? (values.county === "__other__" ? "" : values.county ?? "")} onChange={(event) => setValue("countyOther", event.target.value)} disabled={submitting} maxLength={160} placeholder="Enter county / region" />
             </div>
           ) : (
             <div className={styles.inputWrap}>
@@ -360,7 +362,7 @@ export function OrganizationOnboardingForm({ onBack }: { onBack: () => void }) {
           <label htmlFor="city">City / town</label>
           {manualCity ? (
             <div className={styles.inputWrap}>
-              <input id="city" value={values.cityOther ?? values.city ?? ""} onChange={(event) => setValue("cityOther", event.target.value)} disabled={submitting} maxLength={160} placeholder="Enter city / town" />
+              <input id="city" value={values.cityOther ?? (values.city === "__other__" ? "" : values.city ?? "")} onChange={(event) => setValue("cityOther", event.target.value)} disabled={submitting} maxLength={160} placeholder="Enter city / town" />
             </div>
           ) : (
             <div className={styles.inputWrap}>
