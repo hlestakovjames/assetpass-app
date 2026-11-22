@@ -92,7 +92,7 @@ npm run start
 - Individual and organisation contexts can be established independently and linked later through verified identity/authority workflows.
 - Context switching must revalidate access with the backend.
 - Platform role, organisation role, membership, office/position and permission are distinct.
-- Global Administrator is the highest platform role and retains all registered platform operational permissions; Platform Owner is the ownership description/title associated with that top authority, not a separate RBAC role. Central Platform Administrators are delegated administrators with individually assigned permissions.
+- Global Administrator is the highest platform role and retains all registered platform operational permissions; Platform Owner is the ownership description/title associated with that top authority, not a separate RBAC role. Central Platform Administrators are delegated administrators with individually assigned permissions. Private individual and organisation record access remains separately purpose-, resource-, privacy- and audit-controlled.
 - Marketplace public discovery and authenticated participation use the same authoritative Marketplace domain.
 - Do not present demo data as live production data.
 - AI recommendations must not silently perform consequential operations.
