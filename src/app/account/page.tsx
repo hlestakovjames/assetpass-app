@@ -44,7 +44,10 @@ function AccountContextPage() {
       const organizationWorkspace = refreshedUser.availableWorkspaces.find(
         (workspace) => workspace.type === "organization",
       );
-      if (organizationWorkspace) router.push(organizationWorkspace.href);
+      if (organizationWorkspace) {
+        await selectWorkspaceContext(organizationWorkspace);
+        router.push(organizationWorkspace.href);
+      }
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Unable to claim an approved organisation.");
     } finally {
