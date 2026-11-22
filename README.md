@@ -92,7 +92,7 @@ npm run start
 - Individual and organisation contexts can be established independently and linked later through verified identity/authority workflows.
 - Context switching must revalidate access with the backend.
 - Platform role, organisation role, membership, office/position and permission are distinct.
-- Global Administrator is the platform role; Platform Owner is an ownership description, not an RBAC role.
+- Global Administrator is the highest platform role and retains all registered platform operational permissions; Platform Owner is the ownership description/title associated with that top authority, not a separate RBAC role. Central Platform Administrators are delegated administrators with individually assigned permissions.
 - Marketplace public discovery and authenticated participation use the same authoritative Marketplace domain.
 - Do not present demo data as live production data.
 - AI recommendations must not silently perform consequential operations.
@@ -110,7 +110,7 @@ The repository includes a GitHub Actions workflow for lint and production-build 
 
 1. Validate account landing, context selection and Individual Workspace activation/deactivation against the backend migration and CI.
 3. Organisation-first onboarding and representative/authority verification.
-4. Global Administrator role and permission alignment.
+4. Verify Global Administrator role and permission alignment against the backend forward migration.
 5. Replace demo-backed organisation/platform behavior incrementally as matching backend APIs become available.
 6. Implement workspace capabilities against stable API contracts and acceptance tests.
 
