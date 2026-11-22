@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Icon } from "@/components/platform/platform-icon";
 
 type NavItem = { label: string; icon: string; count?: string };
@@ -21,7 +22,7 @@ export function PlatformSidebar({ activePage, pendingCount, mobileMenuOpen, onNa
   return (
     <aside className={`sidebar ${mobileMenuOpen ? "sidebar-open" : ""}`}>
       <button className="brand" onClick={() => onNavigate("Global Overview")} aria-label="AssetPass platform overview">
-        <span className="brand-mark"><svg viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 3.5 34 9v10.2c0 8.4-5.8 14.2-14 17.3C11.8 33.4 6 27.6 6 19.2V9L20 3.5Z" stroke="currentColor" strokeWidth="2.4" strokeLinejoin="round"/><path d="m20 11 8 4.3v9.2L20 29l-8-4.5v-9.2L20 11Z" stroke="#2DD4BF" strokeWidth="2" strokeLinejoin="round"/><path d="m12 15.3 8 4.6 8-4.6M20 19.9V29" stroke="#2DD4BF" strokeWidth="1.8"/></svg></span>
+        <span className="brand-mark"><Image src="/brand/Assetpass%20Logo.png" alt="" width={42} height={42} /></span>
         <span className="brand-copy"><strong>Asset<span>Pass</span></strong><small>ASSET LIFECYCLE PLATFORM</small></span>
       </button>
       <div className="workspace-selector"><div className="workspace-avatar">P</div><div className="workspace-copy"><span>PLATFORM WORKSPACE</span><strong>Platform Administration</strong></div><span className="workspace-chevron">⌄</span></div>
