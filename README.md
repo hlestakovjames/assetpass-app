@@ -23,8 +23,9 @@ The public marketing website is maintained separately in [assetpass-frontend](ht
 
 | Route group | Responsibility | Current status |
 |---|---|---|
-| `/(auth)` | Login, registration and email verification | UI and API client foundation |
-| `/account` | Account home, available contexts and Individual Workspace activation | Initial account/context landing and activation controls |
+| `/(auth)` | Login, registration, email verification, forgot-password and reset-password | Shared backend authentication and account recovery integration in progress |
+| `/account` | Account home, available contexts and Individual Workspace activation | API-backed account/context landing, workspace controls and Account security entry point |
+| `/account/security` | Signed-in password change | Verifies current password; revokes sessions and requires fresh sign-in |
 | `/individual` | Individual workspace and asset experience | Early route/component foundation |
 | `/organization` | Organisation workspace, members and assets | Some API-backed and some demo/placeholder areas |
 | `/platform` | Platform Administration Workspace | Existing console foundation with placeholder module routes |
@@ -85,6 +86,18 @@ npm run lint
 npm run build
 npm run start
 ```
+
+
+### Shared browser authentication and password recovery
+
+The App browser uses a same-origin BFF route at `/api/v1/*`. Configure `ASSET_PASS_BACKEND_ORIGIN` and `ASSET_PASS_PUBLIC_ORIGIN` in the server environment. Browser code must use the relative `/api/v1` API base; do not point the browser directly at the backend origin or persist refresh tokens in browser storage.
+
+Password recovery uses the shared backend endpoints:
+- `POST /api/v1/auth/password-reset/request` — generic response to prevent account enumeration.
+- `POST /api/v1/auth/password-reset/confirm` — single-use, short-lived token.
+- `POST /api/v1/auth/change-password` — current-password verification, CSRF and authenticated session required.
+
+Reset/change revokes all existing sessions. The user must sign in again. Account approval/status is not changed by recovery.
 
 ## Core alignment rules
 
