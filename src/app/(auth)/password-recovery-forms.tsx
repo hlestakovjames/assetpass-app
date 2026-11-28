@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -90,7 +90,7 @@ export function ForgotPasswordForm() {
 
 export function ResetPasswordForm() {
   const router = useRouter();
-  const [token, setToken] = useState("");
+  const tokenRef = useRef<string | null>(null);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -100,7 +100,7 @@ export function ResetPasswordForm() {
   useEffect(() => {
     const fragment = window.location.hash.slice(1);
     if (fragment) {
-      setToken(fragment);
+      tokenRef.current = fragment;
       window.history.replaceState(null, "", window.location.pathname + window.location.search);
     }
   }, []);
@@ -108,6 +108,7 @@ export function ResetPasswordForm() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
+    const token = tokenRef.current;
     if (!token) {
       setError("This reset link is missing its one-time token. Request a new link.");
       return;
@@ -123,7 +124,7 @@ export function ResetPasswordForm() {
     setSubmitting(true);
     try {
       await resetPassword(token, newPassword);
-      setToken("");
+      tokenRef.current = null;
       setNewPassword("");
       setConfirmPassword("");
       setSuccess(true);
@@ -152,7 +153,7 @@ export function ResetPasswordForm() {
             <div className={styles.inputWrap}><input id="confirmPassword" type="password" autoComplete="new-password" minLength={12} maxLength={1024} required value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)}/></div>
           </div>
           {error && <div className={styles.error} role="alert"><span>!</span>{error}</div>}
-          <button className={styles.submit} type="submit" disabled={submitting || !token}>{submitting ? "Updating…" : "Reset password"} <span aria-hidden="true">→</span></button>
+          <button className={styles.submit} type="submit" disabled={submitting}>{submitting ? "Updating…" : "Reset password"} <span aria-hidden="true">→</span></button>
         </form>
       )}
     </AuthPageShell>
