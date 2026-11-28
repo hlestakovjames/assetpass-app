@@ -1,5 +1,4 @@
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3001/api/v1";
+const API_BASE_URL = "/api/v1";
 
 export type IdentityOrganization = {
   id: string;
@@ -350,6 +349,59 @@ export async function apiFetch(
 
   response = await makeRequest(refreshedToken);
   return response;
+}
+
+
+export async function requestPasswordReset(email: string): Promise<{ message: string }> {
+  const response = await fetch(`${API_BASE_URL}/auth/password-reset/request`, {
+    method: "POST",
+    credentials: "same-origin",
+    cache: "no-store",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  const payload = await readPayload<{ message?: string }>(response);
+  if (!response.ok) {
+    throw new Error(getErrorMessage(payload, "Unable to request password reset. Please try again."));
+  }
+  return { message: payload?.message ?? "If an account exists for that email address, password reset instructions will be sent shortly." };
+}
+
+export async function resetPassword(token: string, newPassword: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/auth/password-reset/confirm`, {
+    method: "POST",
+    credentials: "same-origin",
+    cache: "no-store",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({ token, newPassword }),
+  });
+  const payload = await readPayload<{ message?: unknown }>(response);
+  if (!response.ok) {
+    throw new Error(getErrorMessage(payload, "This reset link is invalid or has expired."));
+  }
+  clearLocalSession();
+}
+
+export async function changePassword(currentPassword: string, newPassword: string): Promise<void> {
+  if (!accessToken) throw new Error("Your session has expired. Sign in again.");
+  const token = csrfToken ?? (await bootstrapCsrfToken());
+  const response = await fetch(`${API_BASE_URL}/auth/change-password`, {
+    method: "POST",
+    credentials: "same-origin",
+    cache: "no-store",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${accessToken}`,
+      "X-CSRF-Token": token,
+    },
+    body: JSON.stringify({ currentPassword, newPassword }),
+  });
+  const payload = await readPayload<{ message?: unknown }>(response);
+  if (!response.ok) {
+    throw new Error(getErrorMessage(payload, "Unable to change your password. Please try again."));
+  }
+  clearLocalSession();
 }
 
 export async function logout(): Promise<void> {

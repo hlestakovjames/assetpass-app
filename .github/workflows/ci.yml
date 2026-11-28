@@ -4,11 +4,14 @@ on:
   push:
     branches:
       - main
+      - development/architecture-alignment
+      - 'feat/**'
       - feat/functional-platform-identity-organizations
       - feat/global-administrator-role-alignment
   pull_request:
     branches:
       - main
+      - development/architecture-alignment
 
 permissions:
   contents: read

@@ -127,13 +127,21 @@ function AccountContextPage() {
               {user?.fullName ?? "Your account"} · {user?.email ?? ""}
             </p>
           </div>
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
-          >
-            Sign out
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              href="/account/security"
+              className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+            >
+              Account security
+            </Link>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100"
+            >
+              Sign out
+            </button>
+          </div>
         </header>
 
         {error && (
