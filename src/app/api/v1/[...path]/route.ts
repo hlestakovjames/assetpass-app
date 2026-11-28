@@ -82,7 +82,7 @@ async function readLimitedBody(request: Request, maximumBytes: number): Promise<
     combined.set(chunk, offset);
     offset += chunk.byteLength;
   }
-  return combined.buffer;
+  return combined.buffer as ArrayBuffer;
 }
 
 async function proxy(request: NextRequest, context: RouteContext): Promise<Response> {
