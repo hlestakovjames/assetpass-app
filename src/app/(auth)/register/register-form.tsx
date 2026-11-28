@@ -41,7 +41,7 @@ const individualSteps = [
   { title: "Location and address", description: "Tell us where you are based. A physical address is optional." },
   { title: "Personal profile", description: "These details help tailor your AssetPass experience." },
   { title: "Account security", description: "Create the credentials you will use to sign in." },
-  { title: "Review and create", description: "Check your information before creating your active account." },
+  { title: "Review and submit", description: "Check your information before submitting for internal account review." },
 ];
 
 const organizationSteps = [
@@ -437,7 +437,7 @@ export function RegisterForm() {
         <div className={styles.securityNote} style={{ marginTop: 0, padding: 14, border: "1px solid #b9e5d8", borderRadius: 8, background: "#effaf6", color: "#176b58" }}>
           <span className={styles.securityIcon}>✓</span><span>{success}</span>
         </div>
-        <p className={styles.formNote}>Your account is active immediately. An Individual Workspace is optional and can be activated after sign-in. Organization workspaces become available after the organization is reviewed and approved.</p>
+        <p className={styles.formNote}>Your account will be available for sign-in after internal Platform Administration review. Email verification is not required for sign-in once your account is approved.</p>
         <Link href="/login" style={{ color: "#0f8f84", textAlign: "center", fontSize: 12, fontWeight: 700 }}>Continue to sign in</Link>
       </div>
     );
