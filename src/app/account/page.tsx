@@ -10,6 +10,8 @@ import {
   claimOrganizationWithToken,
   deactivateIndividualWorkspace,
   selectWorkspaceContext,
+  optInMarketplace,
+  revokeMarketplace,
 } from "@/features/authentication/auth-client";
 
 function AccountContextPage() {
@@ -20,11 +22,15 @@ function AccountContextPage() {
   const [switchingWorkspace, setSwitchingWorkspace] = useState<string | null>(null);
   const [claimingOrganization, setClaimingOrganization] = useState(false);
   const [organizationClaimToken, setOrganizationClaimToken] = useState("");
+  const [marketplaceBusy, setMarketplaceBusy] = useState(false);
+  const [marketplaceAcknowledgement, setMarketplaceAcknowledgement] = useState(false);
 
   const workspaces = user?.availableWorkspaces ?? [];
   const hasIndividualWorkspace = workspaces.some(
     (workspace) => workspace.type === "individual",
   );
+  const marketplaceActive = user?.applicationEntitlements?.marketplace?.active ?? false;
+  const marketplaceRepresentations = user?.marketplaceOrganizationRepresentations ?? [];
   const pendingOrganizations = (user?.organizations ?? []).filter(
     (organization) =>
       organization.status !== "active" ||
@@ -104,6 +110,39 @@ function AccountContextPage() {
       );
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function handleMarketplaceOptIn() {
+    if (!marketplaceAcknowledgement) {
+      setError("Confirm the Marketplace participation acknowledgement before continuing.");
+      return;
+    }
+    setMarketplaceBusy(true);
+    setError("");
+    try {
+      await optInMarketplace();
+      setMarketplaceAcknowledgement(false);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Unable to activate Marketplace participation.");
+    } finally {
+      setMarketplaceBusy(false);
+    }
+  }
+
+  async function handleMarketplaceRevoke() {
+    const confirmed = window.confirm(
+      "Turn off your individual Marketplace participation? Your AssetPass identity, App access and organisation relationships will remain unchanged.",
+    );
+    if (!confirmed) return;
+    setMarketplaceBusy(true);
+    setError("");
+    try {
+      await revokeMarketplace("Individual opted out from Account Settings.");
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Unable to turn off Marketplace participation.");
+    } finally {
+      setMarketplaceBusy(false);
     }
   }
 
@@ -264,6 +303,70 @@ function AccountContextPage() {
             Access to the Individual Workspace is paused until it is activated
             again.
           </p>
+        </section>
+
+        <section className="mt-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="max-w-2xl">
+              <h2 className="text-lg font-semibold">AssetPass Marketplace participation</h2>
+              <p className="mt-1 text-sm leading-6 text-slate-600">
+                Marketplace access is separate from your AssetPass App account. Opting in lets you use eligible individual participant features; it does not grant authority to represent an organisation or list or sell a particular asset.
+              </p>
+            </div>
+            <span className={marketplaceActive
+              ? "rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700"
+              : "rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600"}>
+              {marketplaceActive ? "Active" : "Not enabled"}
+            </span>
+          </div>
+          {marketplaceActive ? (
+            <button
+              type="button"
+              onClick={handleMarketplaceRevoke}
+              disabled={marketplaceBusy}
+              className="mt-5 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100 disabled:opacity-60"
+            >
+              {marketplaceBusy ? "Please wait…" : "Turn off individual Marketplace access"}
+            </button>
+          ) : (
+            <div className="mt-5">
+              <label className="flex items-start gap-3 text-sm leading-6 text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={marketplaceAcknowledgement}
+                  onChange={(event) => setMarketplaceAcknowledgement(event.target.checked)}
+                  className="mt-1 h-4 w-4 rounded border-slate-300"
+                />
+                <span>
+                  I understand that Marketplace participation is a separate application entitlement and does not by itself authorize me to act for an organisation or to list, sell, own or take custody of an asset.
+                </span>
+              </label>
+              <button
+                type="button"
+                onClick={handleMarketplaceOptIn}
+                disabled={marketplaceBusy || !marketplaceAcknowledgement}
+                className="mt-4 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
+              >
+                {marketplaceBusy ? "Activating…" : "Opt in to Marketplace"}
+              </button>
+            </div>
+          )}
+          {marketplaceRepresentations.length > 0 && (
+            <div className="mt-6 border-t border-slate-200 pt-5">
+              <h3 className="text-sm font-semibold">Organisation Marketplace representation</h3>
+              <p className="mt-1 text-xs leading-5 text-slate-500">
+                These are separate organisation grants. They do not make you the legal owner or automatically authorize asset listings.
+              </p>
+              <ul className="mt-3 space-y-2">
+                {marketplaceRepresentations.map((representation) => (
+                  <li key={representation.grantId} className="rounded-lg bg-slate-50 p-3 text-sm">
+                    <span className="font-medium">{representation.displayName}</span>
+                    <span className="ml-2 text-xs text-slate-500">Authorised representative</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </section>
 
         <section className="mt-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
