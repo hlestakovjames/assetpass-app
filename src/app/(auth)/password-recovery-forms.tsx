@@ -8,7 +8,7 @@ import {
   requestPasswordReset,
   resetPassword,
 } from "@/features/authentication/auth-client";
-import styles from "../login/login.module.css";
+import styles from "./login/login.module.css";
 
 function AuthPageShell({ title, description, children }: {
   title: string;
