@@ -19,6 +19,10 @@ The backend remains authoritative for identity, workspace activation, membership
 
 The public marketing website is maintained separately in [assetpass-frontend](https://github.com/hlestakovjames/assetpass-frontend).
 
+## Registration approval policy
+
+New individual registrations are submitted for internal Platform Administration review. They cannot sign in until approved. Email verification is not required for sign-in once approved; the App must not present a newly submitted account as immediately active.
+
 ## Current route groups
 
 | Route group | Responsibility | Current status |

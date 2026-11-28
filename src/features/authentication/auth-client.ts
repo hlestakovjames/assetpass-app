@@ -545,7 +545,7 @@ export async function registerAccount(input: RegistrationInput): Promise<{ messa
   if (!response.ok) {
     throw new Error(getErrorMessage(payload, "Unable to create your account. Please try again."));
   }
-  return { message: payload?.message ?? "Registration successful. Your account is active and you can sign in now." };
+  return { message: payload?.message ?? "Registration received. If this is a new account, it will be available for sign-in after internal review." };
 }
 
 export async function verifyEmailAddress(token: string): Promise<{ message: string }> {
