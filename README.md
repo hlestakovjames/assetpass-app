@@ -61,11 +61,14 @@ Requires Node.js 22 and npm.
 npm ci
 ```
 
-Set the backend API URL in a local `.env.local` file:
+Configure the same-origin API proxy in a local `.env.local` file:
 
 ```dotenv
-NEXT_PUBLIC_API_BASE_URL=http://localhost:3001/api/v1
+ASSET_PASS_BACKEND_ORIGIN=http://localhost:3001
+ASSET_PASS_PUBLIC_ORIGIN=http://localhost:3000
 ```
+
+The browser calls `/api/v1/*` on the App origin. The Next.js BFF forwards requests to the backend and preserves the host-only authentication cookies. Do not set `NEXT_PUBLIC_API_BASE_URL` to the backend origin. In production, configure the two server-only variables to the exact deployed backend and App origins.
 
 Start the app:
 
