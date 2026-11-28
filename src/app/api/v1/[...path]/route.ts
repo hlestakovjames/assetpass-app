@@ -53,6 +53,38 @@ function getOrigins(request: Request): {
   return { publicOrigin, backendOrigin };
 }
 
+async function readLimitedBody(request: Request, maximumBytes: number): Promise<ArrayBuffer> {
+  const reader = request.body?.getReader();
+  if (!reader) return new ArrayBuffer(0);
+
+  const chunks: Uint8Array[] = [];
+  let totalBytes = 0;
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      totalBytes += value.byteLength;
+      if (totalBytes > maximumBytes) {
+        await reader.cancel();
+        throw new Error("REQUEST_BODY_TOO_LARGE");
+      }
+      chunks.push(value);
+    }
+  } catch (error) {
+    if (error instanceof Error && error.message === "REQUEST_BODY_TOO_LARGE") throw error;
+    throw new Error("REQUEST_BODY_READ_FAILED");
+  }
+
+  const combined = new Uint8Array(totalBytes);
+  let offset = 0;
+  for (const chunk of chunks) {
+    combined.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return combined.buffer;
+}
+
 async function proxy(request: NextRequest, context: RouteContext): Promise<Response> {
   let origins: ReturnType<typeof getOrigins>;
 
@@ -93,9 +125,13 @@ async function proxy(request: NextRequest, context: RouteContext): Promise<Respo
     if (Number.isFinite(declaredLength) && declaredLength > 1_048_576) {
       return Response.json({ message: "Request body is too large." }, { status: 413 });
     }
-    body = await request.arrayBuffer();
-    if (body.byteLength > 1_048_576) {
-      return Response.json({ message: "Request body is too large." }, { status: 413 });
+    try {
+      body = await readLimitedBody(request, 1_048_576);
+    } catch (error) {
+      if (error instanceof Error && error.message === "REQUEST_BODY_TOO_LARGE") {
+        return Response.json({ message: "Request body is too large." }, { status: 413 });
+      }
+      return Response.json({ message: "Unable to read request body." }, { status: 400 });
     }
   }
 
