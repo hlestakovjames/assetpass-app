@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { VerifyEmail } from "./verify-email";
 import styles from "../login/login.module.css";
@@ -14,7 +15,7 @@ export default function VerifyEmailPage() {
     <main className={styles.page}>
       <header className={styles.header}>
         <Link href="/" className={styles.brand} aria-label="AssetPass home">
-          <span className={styles.brandMark}>AP</span>
+          <Image src="/brand/Assetpass%20Logo.png" alt="" width={48} height={48} className={styles.brandMark} />
           <span className={styles.brandName}>Asset<span>Pass</span></span>
         </Link>
         <span className={styles.headerLabel}>ASSET INTELLIGENCE PLATFORM</span>

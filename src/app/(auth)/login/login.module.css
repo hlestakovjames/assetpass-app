@@ -25,17 +25,11 @@
 }
 
 .brandMark {
-  display: grid;
-  width: 43px;
-  height: 43px;
-  place-items: center;
-  border-radius: 11px;
-  background: #123047;
-  color: #ffffff;
-  font-size: 13px;
-  font-weight: 850;
-  letter-spacing: -0.8px;
-  box-shadow: 0 4px 12px rgb(18 48 71 / 15%);
+  display: block;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  object-fit: contain;
 }
 
 .brandName {
@@ -448,13 +442,6 @@
 
 .brand {
   color: #f3f8fb;
-}
-
-.brandMark {
-  border: 1px solid rgb(45 212 191 / 35%);
-  background: linear-gradient(145deg, #1a465c, #102b40);
-  color: #55d8c5;
-  box-shadow: 0 5px 18px rgb(0 0 0 / 20%);
 }
 
 .brandName span {

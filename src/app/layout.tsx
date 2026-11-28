@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   description:
     "AssetPass is an asset lifecycle and custody management platform for tracking organizational assets, assignments, inspections, maintenance and disposal.",
   applicationName: "AssetPass",
+  icons: { icon: [{ url: "/brand/Assetpass%20Logo.png", type: "image/png" }] },
 };
 
 export default function RootLayout({

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { OrganizationOnboardingVerification } from "./verification";
+import { AssetPassBrand } from "@/components/shared/assetpass-brand";
 
 export const instant = false;
 
@@ -19,7 +20,7 @@ export default async function OrganizationOnboardingVerifyPage({
   return (
     <main style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: 24, background: "#f4f7f9" }}>
       <section style={{ width: "min(100%, 520px)", padding: 28, borderRadius: 14, background: "#fff", boxShadow: "0 12px 40px rgba(18,48,71,.08)", display: "grid", gap: 16 }}>
-        <Link href="/" style={{ color: "#0f8f84", fontWeight: 800, textDecoration: "none" }}>AssetPass</Link>
+        <AssetPassBrand />
         <div>
           <p style={{ color: "#0f9488", fontSize: 11, fontWeight: 800, letterSpacing: 1 }}>ORGANISATION ONBOARDING</p>
           <h1 style={{ color: "#123047", fontSize: 26, margin: "0 0 8px" }}>Verify representative email</h1>
